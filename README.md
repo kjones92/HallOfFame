@@ -36,7 +36,8 @@ Once this has been you, you can navigate to the website at: http://localhost:808
 
 1. Open Terminal - iTerm
 2. Navigate into HallOfFame - `cd Desktop/HallOfFame`
-3. Execute `docker compose up`
+3. Type `code .` to open visual studio code.
+3. Execute `docker compose up` in the terminal.
 3. Open another tab in terminal - Menu > Shell > Add Tab
 4. Navigate new tab into Server - `cd Desktop/HallOfFame/Server`
 5. Execute - `php -S localhost:8080`
