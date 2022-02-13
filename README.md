@@ -14,13 +14,6 @@ In order to get MySql running and for flyway to run we use the command command w
 docker compose up
 ```
 
-In the event that we need to clear down the database from testing content or to make changes to the tables the follow steps should be followed:
-
-1. Navigate to the root Hall Of Fame directory
-2. Run `docker compose down`
-3. Run `docker volume prune --force`
-4. Run `docker compose up`
-
 # Web
 This application is written in php and uses `atk4/ui` to serve the website. To run the application simply navigate into the server directory and type:
 
@@ -31,8 +24,7 @@ php -S localhost:8080
 Once this has been you, you can navigate to the website at: http://localhost:8080/
 
 
-
-# Step by Step
+# Run Application Step by Step
 
 1. Open Terminal - iTerm
 2. Navigate into HallOfFame - `cd Desktop/HallOfFame`
@@ -41,3 +33,19 @@ Once this has been you, you can navigate to the website at: http://localhost:808
 3. Open another tab in terminal - Menu > Shell > Add Tab
 4. Navigate new tab into Server - `cd Desktop/HallOfFame/Server`
 5. Execute - `php -S localhost:8080`
+
+# Stop Application Step by Step
+
+1. Open root directory HallOfFame - Desktop/HallOfFame
+2. Press control + c (kills the running docker compose)
+3. Open server directory HallOfFame - Desktop/HallOfFame/Server
+4. Press control + c (kills the running php process)
+
+# Clear database Step by Step
+
+In the event that we need to clear down the database from testing content or to make changes to the tables the follow steps should be followed:
+
+1. Open Terminal - iTerm
+2. Navigate into HallOfFame - `cd Desktop/HallOfFame`
+3. Run `docker compose down`
+4. Run `docker volume prune --force`
