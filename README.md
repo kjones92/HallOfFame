@@ -32,7 +32,7 @@ Once this has been you, you can navigate to the website at: http://localhost:808
 
 
 
-#Step by Step
+# Step by Step
 
 1. Open Terminal - iTerm
 2. Navigate into HallOfFame - `cd Desktop/HallOfFame`
