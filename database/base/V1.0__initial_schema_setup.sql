@@ -88,12 +88,6 @@ CREATE TABLE `user_album` (
   `album_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `marks_table` (
-  `id` int NOT NULL,
-  `email` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
 ALTER TABLE `album`
   ADD PRIMARY KEY (`id`);
 
@@ -229,8 +223,5 @@ ALTER TABLE `user`
 ALTER TABLE `user_album`
   ADD CONSTRAINT `FK_user_album_album_id` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`),
   ADD CONSTRAINT `FK_user_album_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
-ALTER TABLE `marks_table`
-  ADD PRIMARY KEY (`id`);
 
 COMMIT;
