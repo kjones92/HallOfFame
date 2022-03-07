@@ -3,7 +3,7 @@
 
         include ("./utils/dbconn.php");
 
-        $read = "SELECT * FROM artist;";
+        $read = "SELECT * FROM subgenre;";
         
         $result = $conn->query($read);
         
@@ -11,6 +11,7 @@
             echo $conn -> error;
         }
 
+        // build a response array
         $api_response = array();
         
         while ($row = $result->fetch_assoc()) {
@@ -18,30 +19,31 @@
             array_push($api_response, $row);
         }
             
+        // encode the response as JSON
         $response = json_encode($api_response);
         
+        // echo out the response
         echo $response;
 
         header("HTTP/1.1 200 OK");
     }
 
+
     function handlePost ($requestVariables) {
 
-        // instead of $_POST['username'] it should be $requestVariables['username']
-        // instead of isset($_POST['username']) it should be isset("username", $requestVariables)
-
-        if (!isset($requestVariables['name']))  {
+        if ((!isset($requestVariables['description'])) || (!isset($requestVariables['genre_id']))) {
             header("HTTP/1.1 400 Bad Request");
-            echo "Artist information is required";  
+            echo "Subgenre information is required";  
 
         }
         else {
             include ("./utils/dbconn.php");
 
-            $name = $conn->real_escape_string($requestVariables['name']);
+            $description = $conn->real_escape_string($requestVariables['description']);
+            $genreId = $conn->real_escape_string($requestVariables['genre_id']);
 
-            $query = $conn->prepare("INSERT INTO artist (name) VALUES (?)");
-            $query->bind_param('s', $name);
+            $query = $conn->prepare("INSERT INTO subgenre (description, genre_id) VALUES (?, ?)");
+            $query->bind_param('si', $description, $genreId);
 
             $result = $query->execute();
             
@@ -56,20 +58,21 @@
     }
 
 
-    function handlePut ($artistId, $requestVariables) {
+    function handlePut ($subgenreId, $requestVariables) {
 
-        if (!isset($requestVariables['name'])) {
+        if ((!isset($requestVariables['description']))|| (!isset($requestVariables['genre_id']))) {
             header("HTTP/1.1 400 Bad Request");
-            echo "Profile information is required";  
+            echo "Subgenre information is required";  
 
         }
         else {
             include ("./utils/dbconn.php");
 
-            $name = $conn->real_escape_string($requestVariables['name']);
+            $description = $conn->real_escape_string($requestVariables['description']);
+            $genreId = $conn->real_escape_string($requestVariables['genre_id']);
 
-            $query = $conn->prepare("UPDATE artist set name = ? where id = ?");
-            $query->bind_param('si', $name, $artistId);
+            $query = $conn->prepare("UPDATE subgenre set description = ?, genre_id = ? where id = ?");
+            $query->bind_param('sii', $description, $genreId, $subgenreId);
 
             $result = $query->execute();
             
@@ -83,14 +86,14 @@
         }
     }
 
-    function handleDelete($artistId) {
+    function handleDelete($subgenreId) {
 
         include ("./utils/dbconn.php");
 
-        $read = "DELETE FROM artist WHERE artist.id = ? ;";
+        $read = "DELETE FROM subgenre WHERE subgenre.id = ? ;";
 
         $query = $conn->prepare($read);
-        $query->bind_param("i", $artistId);
+        $query->bind_param("i", $subgenreId);
 
         if ( $query->execute()) {
             return true;
@@ -101,7 +104,7 @@
         }
     }
 
-    function retrieveArtistId($routing) {
+    function retrieveSubgenreId($routing) {
         if (count($routing) > 2 && ctype_digit($routing[2])) {
             return intval($routing[2]);
         }
@@ -124,10 +127,10 @@
               handlePost($requestVariables);
               break;
             case 'PUT':
-                $artistId = retrieveArtistId($routing);
+                $subgenreId = retrieveSubgenreId($routing);
                 $requestVariables = decodeJson();
-                if ($artistId != null) {
-                    handlePut($artistId, $requestVariables);
+                if ($subgenreId != null) {
+                    handlePut($subgenreId, $requestVariables);
                 }
                 else {
                     header("HTTP/1.1 400 Bad Request");
@@ -135,10 +138,9 @@
                 }
               break;
               case 'DELETE':
-                $artistId = retrieveArtistId($routing);
-                $requestVariables = decodeJson();
-                if ($artistId != null) {
-                    handleDelete($artistId);
+                $subgenreId = retrieveSubgenreId($routing);
+                if ($subgenreId != null) {
+                    handleDelete($subgenreId);
                 }
                 else {
                     header("HTTP/1.1 400 Bad Request");
