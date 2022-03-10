@@ -17,7 +17,7 @@ services:
     command: -url='jdbc:mysql://db/greatest_albums?verifyServerCertificate=false&allowPublicKeyRetrieval=true' -user=user
       -password=password -connectRetries=5 migrate
     volumes:
-      - ./database:/flyway/sql
+      - ./database/base:/flyway/sql
     depends_on:
       - db
 volumes:

@@ -1,4 +1,4 @@
-insert into album(title, year) values ('katrina Test Album', 2021);
+insert into album(title, year, ranking) values ('katrina Test Album', 2021, 1);
 
 insert into artist(name) values ('Katrina Jones');
 

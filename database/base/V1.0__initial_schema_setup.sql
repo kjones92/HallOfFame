@@ -1,7 +1,8 @@
 CREATE TABLE `album` (
   `id` int NOT NULL,
   `title` varchar(255) NOT NULL,
-  `year` int NOT NULL
+  `year` int NOT NULL,
+  `ranking` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `album_genre` (
@@ -77,7 +78,8 @@ CREATE TABLE `user` (
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role_id` int NOT NULL
+  `role_id` int NOT NULL,
+  `is_deleted` boolean NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `user_album` (
