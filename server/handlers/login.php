@@ -1,98 +1,92 @@
 <?php
+    function handleGet () {
 
-include ("./utils/dbconn.php"); 
+        $headers = apache_request_headers();
+        if ((!array_key_exists('Authorization', $headers) || !is_jwt_valid(getBearerToken($headers["Authorization"]), "refreshSecret"))) {
+            header("HTTP/1.1 400 Bad Request");
+            echo "Refresh token is required.";
+        }
+        else {
 
-$read = "SELECT email, password, role_id
-        FROM user;";
+            include ("./utils/dbconn.php");
 
-$result = $conn->query($read);
+            $userId = extractUserId(getBearerToken($headers["Authorization"]), "refreshSecret");
+            $query = $conn->prepare("select id, username, email, role_id, password from user where id = ?  and is_deleted != 1");
+            $query->bind_param('i',$userId);
+            $query->execute();
 
-if (($_SERVER['PHP_AUTH_USER'] == "Admin" ) && ($_SERVER['PHP_AUTH_PW'] = "password")) {
-    echo "valid username and password"; 
-} else {
-    header("WWW-Authenticate: Basic realm='Admin Dashboard'");
-    header("HTTP/1.0 401 Unauthorized");
-    echo "You need to enter a valid username and password.";
-    exit;
+            $result = $query->get_result();
 
-    if ($result.str_contains("role_id", 1)) {
+            if (!$result) {
+                header("HTTP/1.1 401 Unauthorized");
+                echo $conn->error;
+            }
+            else {
+                $row = $result->fetch_assoc();
+                $access = array('sub'=>$row["id"],'name'=>$row["username"], 'user_role_id'=>$row["role_id"], 'exp'=>(time() + 1800));
+
+                echo json_encode(array("access" => generate_jwt($access)));
+                header("HTTP/1.1 200 OK"); 
+            }
+        }
         
     }
-}
-
-?> 
 
 
-<?php
-    function handleGet() {
-
-        include ("./utils/dbconn.php"); 
-
-        $read = "SELECT email, password, role_id
-        FROM user;";
-        
-        $result = $conn->query($read);
-        
-        if (!$result)  {
-            echo $conn -> error;
-        }
-
-        // build a response array
-        $api_response = array();
-        
-        while ($row = $result->fetch_assoc()) {
-            
-            array_push($api_response, $row);
-        }
-            
-        // encode the response as JSON
-        $response = json_encode($api_response);
-        
-        // echo out the response
-        echo $response;
-
-        header("HTTP/1.1 200 OK");
-    }
-
-    function handlePost () {
-
-        if ((!isset($requestVariables['email'])) || (!isset($requestVariables['password'])) 
-        || (!isset($requestVariables['role_id']) )) {
+    function handlePost ($requestVariables) {
+        if ((!isset($requestVariables['email'])) || (!isset($requestVariables['password']))) {
             header("HTTP/1.1 400 Bad Request");
             echo "Login information is required";  
-
         }
         else {
             include ("./utils/dbconn.php");
 
             $email = $conn->real_escape_string($requestVariables['email']);
-            $password = $conn->real_escape_string($requestVariables['password']);
-            $roleId = $conn->real_escape_string($requestVariables['role_id']);
+            $query = $conn->prepare("select id, username, email, role_id, password from user where email = ?  and is_deleted != 1");
+            $query->bind_param('s', $email);
+            $query->execute();
 
-            $query = $conn->prepare("INSERT INTO user (email, password, role_id) VALUES (?, ?, ?)");
-            $query->bind_param('ssi', $email, $password, $roleId);
+            $result = $query->get_result();
 
-            $result = $query->execute();
-            
             if (!$result) {
-                header("HTTP/1.1 500 Internal Server Error");
+                header("HTTP/1.1 401 Unauthorized");
                 echo $conn->error;
             }
             else {
-                header("HTTP/1.1 201 Created");
+                $password = $conn->real_escape_string($requestVariables['password']);
+                $row = $result->fetch_assoc();
+                $databasePassword = $row["password"];
+                if (password_verify($password, $databasePassword)) {
+                    $access = array('sub'=>$row["id"],'name'=>$row["username"], 'user_role_id'=>$row["role_id"], 'exp'=>(time() + 1800));
+                    $refresh = array('sub'=>$row["id"], 'exp'=>(time() + 18000000));
+
+                    echo json_encode(array("access" => generate_jwt($access), "refresh" => generate_jwt($refresh, "refreshSecret")));
+                    header("HTTP/1.1 200 OK"); 
+                }
+                else {
+                    header("HTTP/1.1 401 Unauthorized");
+                    echo $conn->error;
+                }
             }
         }
+           
     }
 
 
+
+    function decodeJson() {
+        return json_decode(file_get_contents('php://input'), true);
+    }
+
     function handle() {
         switch ($_SERVER['REQUEST_METHOD']) {
-            case 'GET':
-              handleGet();
-              break;
             case 'POST':
-              handlePost ();
-              break;
+                $requestVariables = decodeJson();
+                handlePost ($requestVariables);
+                break;
+            case 'GET':
+                handleGet ();
+                break;
             default:
             header("HTTP/1.1 404 Not Found"); 
         }
