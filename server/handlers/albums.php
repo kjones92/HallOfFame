@@ -3,7 +3,7 @@
 
         include ("./utils/dbconn.php");
 
-        $read = "SELECT album.*, a.name artist_name, g.description genre, sg.description subgenre FROM album
+        $read = "SELECT album.*, a.name artist_name, album.ranking, g.description genre, sg.description subgenre FROM album
         left outer join artist_album aa on album.id = aa.album_id
         left outer join artist a on aa.artist_id = a.id
 
@@ -40,7 +40,7 @@
 
         include ("./utils/dbconn.php");
         //, a.id artist_id, g.id genre_id, sg.id subgenre_id 
-        $read = " SELECT album.*, a.name artist_name, g.description genre, sg.description subgenre FROM album
+        $read = " SELECT album.*, a.name artist_name, a.ranking, g.description genre, sg.description subgenre FROM album
         left outer join artist_album aa on album.id = aa.album_id
         left outer join artist a on aa.artist_id = a.id
 
@@ -73,59 +73,55 @@
 
     function handlePost ($requestVariables) {
 
-        // instead of $_POST['username'] it should be $requestVariables['username']
-        // instead of isset($_POST['username']) it should be isset("username", $requestVariables)
-
         if ((!isset($requestVariables['title'])) || (!isset($requestVariables['year'])) || (!isset($requestVariables['artistId'])) 
-        || (!isset($requestVariables['genreId']))|| (!isset($requestVariables['subgenreId'])) ) {
+        || (!isset($requestVariables['genreId'])) || (!isset($requestVariables['subgenreId'])) || (!isset($requestVariables['rank'])) ) {
             header("HTTP/1.1 400 Bad Request");
             echo "Album information is required";  
-
         }
         else {
             include ("./utils/dbconn.php");
 
-            $title = $conn->real_escape_string($requestVariables['title']);
-            $year = $conn->real_escape_string($requestVariables['year']);
+            $conn->autocommit(false);
+            try {
 
-            $albumQuery = $conn->prepare("INSERT INTO album (title, year) VALUES (?, ?)");
-            $albumQuery->bind_param('si', $title, $year);
+                $title = $conn->real_escape_string($requestVariables['title']);
+                $year = $conn->real_escape_string($requestVariables['year']);
+                $rank = $conn->real_escape_string($requestVariables['rank']);
 
-            $result = $albumQuery->execute();
-     
-            if (!$result) {
-                header("HTTP/1.1 500 Internal Server Error");
-                echo $conn->error;
-            }
-    
-            else {
+                $updateRankQuery = $conn->prepare("UPDATE album set ranking = ranking + 1 where ranking >= ?");
+                $updateRankQuery->bind_param('i', $rank);
+                $updateRankQuery->execute();
+
+                $albumQuery = $conn->prepare("INSERT INTO album (title, year, ranking) VALUES (?, ?, ?)");
+                $albumQuery->bind_param('sii', $title, $year, $rank);
+                $albumQuery->execute();
+
                 $newAlbumId = $conn->insert_id; 
-                $conn->autocommit(false);
 
-                try {
-                    $artistId = $conn->real_escape_string($requestVariables['artistId']);
-                    $genreId = $conn->real_escape_string($requestVariables['genreId']);
-                    $subgenreId = $conn->real_escape_string($requestVariables['subgenreId']);
-    
-                    $artistAssociationQuery = $conn->prepare("INSERT INTO artist_album (artist_id, album_id) VALUES (?, ?)");
-                    $artistAssociationQuery->bind_param('ii', $artistId, $newAlbumId); 
-                    $artistAssociationQuery->execute();
-    
-                    $genreAssociationQuery = $conn->prepare("INSERT INTO album_genre (genre_id, album_id) VALUES (?, ?)");
-                    $genreAssociationQuery->bind_param('ii', $genreId, $newAlbumId); 
-                    $genreAssociationQuery->execute();
-    
-                    $subgenreAssociationQuery = $conn->prepare("INSERT INTO album_subgenre (subgenre_id, album_id) VALUES (?, ?)");
-                    $subgenreAssociationQuery->bind_param('ii', $subgenreId, $newAlbumId); 
-                    $subgenreAssociationQuery->execute();
-    
-                    $conn->autocommit(true);
-                    header("HTTP/1.1 201 Created");
+                $artistId = $conn->real_escape_string($requestVariables['artistId']);
+                $genreId = $conn->real_escape_string($requestVariables['genreId']);
+                $subgenreId = $conn->real_escape_string($requestVariables['subgenreId']);
 
-                } catch (Exception $e) {
-                    header("HTTP/1.1 500 Internal Server Error");
-                    echo $e->getMessage();  
-                }
+                $artistAssociationQuery = $conn->prepare("INSERT INTO artist_album (artist_id, album_id) VALUES (?, ?)");
+                $artistAssociationQuery->bind_param('ii', $artistId, $newAlbumId); 
+                $artistAssociationQuery->execute();
+
+                $genreAssociationQuery = $conn->prepare("INSERT INTO album_genre (genre_id, album_id) VALUES (?, ?)");
+                $genreAssociationQuery->bind_param('ii', $genreId, $newAlbumId); 
+                $genreAssociationQuery->execute();
+
+                $subgenreAssociationQuery = $conn->prepare("INSERT INTO album_subgenre (subgenre_id, album_id) VALUES (?, ?)");
+                $subgenreAssociationQuery->bind_param('ii', $subgenreId, $newAlbumId); 
+                $subgenreAssociationQuery->execute();
+
+                header("HTTP/1.1 201 Created");
+
+            } catch (Exception $e) {
+                header("HTTP/1.1 500 Internal Server Error");
+                echo $e->getMessage();  
+            }
+            finally{
+                $conn->autocommit(true);
             }
         }
     }
@@ -133,7 +129,7 @@
     function handlePut ($albumId, $requestVariables) {
 
         if ((!isset($requestVariables['title'])) || (!isset($requestVariables['year'])) || (!isset($requestVariables['artistId']))
-         || (!isset($requestVariables['genreId'])) || (!isset($requestVariables['subgenreId']))) {
+         || (!isset($requestVariables['genreId'])) || (!isset($requestVariables['subgenreId'])) || (!isset($requestVariables['rank']))) {
             header("HTTP/1.1 400 Bad Request");
             echo "Profile information is required";  
 
@@ -149,6 +145,11 @@
 
             $conn->autocommit(false);
             try {
+                $rank = $conn->real_escape_string($requestVariables['rank']);
+                $updateRankQuery = $conn->prepare("UPDATE album set ranking = ranking + 1 where ranking >= ?");
+                $updateRankQuery->bind_param('i', $rank);
+                $updateRankQuery->execute();
+
                 $albumQuery = $conn->prepare("UPDATE album set title = ?, year = ? where id = ?");
                 $albumQuery->bind_param('sii', $title, $year, $albumId);
 

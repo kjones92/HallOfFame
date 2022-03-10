@@ -167,7 +167,7 @@
             case 'GET':
                 $reviewId = retrieveReviewId($routing);
                 if ($reviewId != null) {
-                    handleGetSingle(intval($routing[2])); 
+                    handleGetSingle($reviewId); 
                 }
                 else {
                     handleGet();
@@ -185,7 +185,7 @@
                 }
                 else {
                     header("HTTP/1.1 400 Bad Request");
-                    echo "Id is required to update user";  
+                    echo "Id is required to update the album";  
                 }
               break;
               case 'DELETE':

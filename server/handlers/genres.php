@@ -30,9 +30,6 @@
 
     function handlePost ($requestVariables) {
 
-        // instead of $_POST['username'] it should be $requestVariables['username']
-        // instead of isset($_POST['username']) it should be isset("username", $requestVariables)
-
         if ((!isset($requestVariables['description']))) {
             header("HTTP/1.1 400 Bad Request");
             echo "Genre information is required";  
@@ -85,19 +82,7 @@
             }
         }
     }
-
-    function retrieveGenreId($routing) {
-        if (count($routing) > 2 && ctype_digit($routing[2])) {
-            return intval($routing[2]);
-        }
-        else {
-            return null;
-        }
-    }
-
-    function decodeJson() {
-        return json_decode(file_get_contents('php://input'), true);
-    }
+    
 
     function handleDelete($genreId) {
 
@@ -117,6 +102,18 @@
         }
     }
 
+    function retrieveGenreId($routing) {
+        if (count($routing) > 2 && ctype_digit($routing[2])) {
+            return intval($routing[2]);
+        }
+        else {
+            return null;
+        }
+    }
+
+    function decodeJson() {
+        return json_decode(file_get_contents('php://input'), true);
+    }
 
     function handle($routing) {
         switch ($_SERVER['REQUEST_METHOD']) {
