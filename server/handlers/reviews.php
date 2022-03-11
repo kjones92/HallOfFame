@@ -13,7 +13,6 @@
             echo $conn -> error;
         }
 
-        // build a response array
         $api_response = array();
         
         while ($row = $result->fetch_assoc()) {
@@ -21,10 +20,8 @@
             array_push($api_response, $row);
         }
             
-        // encode the response as JSON
         $response = json_encode($api_response);
         
-        // echo out the response
         echo $response;
 
         header("HTTP/1.1 200 OK");
@@ -60,9 +57,6 @@
 
     function handlePost ($requestVariables) {
 
-        // instead of $_POST['username'] it should be $requestVariables['username']
-        // instead of isset($_POST['username']) it should be isset("username", $requestVariables)
-
         if ((!isset($requestVariables['title'])) || (!isset($requestVariables['description'])) || (!isset($requestVariables['score'])) || (!isset($requestVariables['date']))
         || (!isset($requestVariables['review_status_id'])) || (!isset($requestVariables['album_id'])) || (!isset($requestVariables['user_id'])) ) {
             header("HTTP/1.1 400 Bad Request");
@@ -94,7 +88,8 @@
             }
         }
     }
-
+    // idea - hard code the review_status_id to 1 (which is 'Pending'), then allow the admin user through a 'put' request, to change the status to 2 ('Approved')
+    // limit to 250 characters assigned to front end development?  
 
     function handlePut ($reviewId, $requestVariables) {
 

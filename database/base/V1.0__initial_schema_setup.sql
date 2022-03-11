@@ -69,8 +69,7 @@ CREATE TABLE `role` (
 
 CREATE TABLE `subgenre` (
   `id` int NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `genre_id` int NOT NULL
+  `description` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `user` (
@@ -137,8 +136,7 @@ ALTER TABLE `role`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `subgenre`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_subgenre_genre_id` (`genre_id`);
+  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
@@ -215,9 +213,6 @@ ALTER TABLE `review`
   ADD CONSTRAINT `FK_review_album_album_id` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`),
   ADD CONSTRAINT `FK_review_review_status_id` FOREIGN KEY (`review_status_id`) REFERENCES `review_status` (`id`),
   ADD CONSTRAINT `FK_review_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
-ALTER TABLE `subgenre`
-  ADD CONSTRAINT `FK_subgenre_genre_id` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`);
 
 ALTER TABLE `user`
   ADD CONSTRAINT `FK_user_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`);

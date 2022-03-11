@@ -1,11 +1,4 @@
-# Database
-
-Overview on how to start
-
-# Data cleanup process
-
-1. Create holding pen table
-```
+-- 1. Create holding pen table
 create table holding_pen
 (
     Number   int  null,
@@ -15,14 +8,13 @@ create table holding_pen
     Genre    text null,
     subgenre text null
 );
-```
 
-2. import from CSV file into database directly
+-- 2. import from CSV file into database directly
 
-`Use DataGrip to 'Import Data From file'`
+-- using datagrip to import from file
 
-3. Clean up holding pen with below scripts
-```
+-- 3 Clean up holding pen with below scripts
+
 -- Album Cleanup
 update holding_pen set Album =
 REPLACE(
@@ -39,7 +31,7 @@ REPLACE(
     artist, BINARY '�', ' '
 )  ;
 
--- Genre Cleanup -- There was an issue with Folk, World & country - we have to specifically handle this.
+-- Genre Cleanup
 update holding_pen set Genre =
 LTRIM(
     RTRIM(
@@ -62,9 +54,8 @@ LTRIM(
     )
 );
 
-```
-4. Get data into real tables
-```
+-- 4. Get data into real tables
+
 -- insert albums
 insert into album (title, year, ranking)
 select Album, year, number
@@ -105,9 +96,6 @@ select a.Id album_id, sg.id subgenre_id
 from holding_pen hp
 inner join album a on a.title = hp.Album
 inner join subgenre sg on hp.subgenre like CONCAT('%', sg.description, '%');
-```
 
-5. Fix the folk, world & country (we had to avoid this with the comma separation)
-```
+-- 5. Fix the folk, world & country
 update genre set description = 'Folk, World & Country' where description = 'Folk World & Country'
-```

@@ -19,7 +19,6 @@
             echo $conn -> error;
         }
 
-        // build a response array
         $api_response = array();
         
         while ($row = $result->fetch_assoc()) {
@@ -27,10 +26,8 @@
             array_push($api_response, $row);
         }
             
-        // encode the response as JSON
         $response = json_encode($api_response);
         
-        // echo out the response
         echo $response;
 
         header("HTTP/1.1 200 OK");
@@ -39,7 +36,7 @@
     function handleGetSingle($albumId) {
 
         include ("./utils/dbconn.php");
-        //, a.id artist_id, g.id genre_id, sg.id subgenre_id 
+    
         $read = " SELECT album.*, a.name artist_name, a.ranking, g.description genre, sg.description subgenre FROM album
         left outer join artist_album aa on album.id = aa.album_id
         left outer join artist a on aa.artist_id = a.id
