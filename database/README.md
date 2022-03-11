@@ -92,7 +92,7 @@ from holding_pen hp
 inner join artist a on a.name = hp.Artist
 inner join album a2 on hp.Album = a2.title;
 
--- inset album genres
+-- insert album genres
 insert into album_genre(album_id, genre_id)
 select a.Id album_id, g.id genre_id
 from holding_pen hp
@@ -104,6 +104,20 @@ insert into album_subgenre(album_id, subgenre_id)
 select a.Id album_id, sg.id subgenre_id
 from holding_pen hp
 inner join album a on a.title = hp.Album
+inner join subgenre sg on hp.subgenre like CONCAT('%', sg.description, '%');
+
+-- insert artist genres
+insert into artist_genre(artist_id, genre_id)
+select a.Id artist_id, g.id genre_id
+from holding_pen hp
+inner join artist a on a.name = hp.Artist
+inner join genre g on hp.Genre like CONCAT('%', g.description, '%');
+
+-- insert artist subgenres
+insert into artist_subgenre(artist_id, subgenre_id)
+select a.Id artist_id, sg.id subgenre_id
+from holding_pen hp
+inner join artist a on a.name = hp.Artist
 inner join subgenre sg on hp.subgenre like CONCAT('%', sg.description, '%');
 ```
 

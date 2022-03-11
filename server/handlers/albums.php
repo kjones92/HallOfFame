@@ -28,9 +28,9 @@
             
         $response = json_encode($api_response);
         
-        echo $response;
-
         header("HTTP/1.1 200 OK");
+
+        echo $response;
     }
 
     function handleGetSingle($albumId) {
