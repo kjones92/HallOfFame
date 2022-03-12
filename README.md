@@ -29,17 +29,36 @@ Once this has been you, you can navigate to the website at: http://localhost:808
 1. Open Terminal - iTerm
 2. Navigate into HallOfFame - `cd Desktop/HallOfFame`
 3. Type `code .` to open visual studio code.
-3. Execute `docker compose up` in the terminal.
-3. Open another tab in terminal - Menu > Shell > Add Tab
-4. Navigate new tab into Server - `cd Desktop/HallOfFame/Server`
-5. Execute - `php -S localhost:8080`
+4. Execute `docker compose up` in the terminal.
+5. Application should be running.
 
-# Stop Application Step by Step
+# If you need to adjust code locally
 
-1. Open root directory HallOfFame - Desktop/HallOfFame
-2. Press control + c (kills the running docker compose)
-3. Open server directory HallOfFame - Desktop/HallOfFame/Server
-4. Press control + c (kills the running php process)
+1. Open Terminal - iTerm
+2. Navigate into HallOfFame - `cd Desktop/HallOfFame`
+3. Type `code .` to open visual studio code.
+4. Open `docker-compose.yaml` and remove the api section:
+```
+  api:
+    build: ./server
+    ports:
+      - 8080:8080
+    environment:
+      HOST: "db"
+      USERNAME: "user"
+      PASSWORD: "password"
+      DB: "greatest_albums"
+    depends_on:
+      - flyway
+```
+5. Execute `docker compose up` in the terminal.
+6. Open another tab in terminal - Menu > Shell > Add Tab
+7. Navigate new tab into Server - `cd Desktop/HallOfFame/Server`
+8. Execute - `php -S localhost:8080`
+
+# Stop Application
+
+To stop the application runnung in docker compose or if you're running `php -S localhost:8080`, simply press control + c. This issues a signal to terminate the application (SIGTERM).
 
 # Clear database Step by Step
 

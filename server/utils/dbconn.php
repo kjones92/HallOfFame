@@ -1,6 +1,6 @@
 <?php
 
-      $host = array_key_exists('HOST', $_ENV) ? $_ENV["HOST"] : "127.0.0.1";
+      $host = array_key_exists("HOST", $_ENV) ? $_ENV["HOST"] : "127.0.0.1";
       $user = "user"; 
       $password = "password"; 
       $db = "greatest_albums"; 
