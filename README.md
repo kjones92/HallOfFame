@@ -14,16 +14,6 @@ In order to get MySql running and for flyway to run we use the command command w
 docker compose up
 ```
 
-# Web
-This application is written in php and uses `atk4/ui` to serve the website. To run the application simply navigate into the server directory and type:
-
-```
-php -S localhost:8080
-```
-
-Once this has been you, you can navigate to the website at: http://localhost:8080/
-
-
 # Run Application Step by Step
 
 1. Open Terminal - iTerm.
