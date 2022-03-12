@@ -1,5 +1,16 @@
 version: "3"
 services:
+  api:
+    build: ./server
+    ports:
+      - 8080:8080
+    environment:
+      HOST: "db"
+      USERNAME: "user"
+      PASSWORD: "password"
+      DB: "greatest_albums"
+    depends_on:
+      - flyway
   db:
     image: mysql:latest
     restart: always

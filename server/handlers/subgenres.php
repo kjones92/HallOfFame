@@ -1,6 +1,5 @@
 <?php
     function handleGet() {
-
         include ("./utils/dbconn.php");
 
         $read = "SELECT * FROM subgenre;";
