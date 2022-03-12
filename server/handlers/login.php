@@ -7,7 +7,6 @@
             echo "Refresh token is required.";
         }
         else {
-
             include ("./utils/dbconn.php");
 
             $userId = extractUserId(getBearerToken($headers["Authorization"]), "refreshSecret");
@@ -24,9 +23,9 @@
             else {
                 $row = $result->fetch_assoc();
                 $access = array('sub'=>$row["id"],'name'=>$row["username"], 'user_role_id'=>$row["role_id"], 'exp'=>(time() + 1800));
-
-                echo json_encode(array("access" => generate_jwt($access)));
+                
                 header("HTTP/1.1 200 OK"); 
+                echo json_encode(array("access" => generate_jwt($access)));
             }
         }
         
@@ -42,26 +41,26 @@
             include ("./utils/dbconn.php");
 
             $email = $conn->real_escape_string($requestVariables['email']);
-            $query = $conn->prepare("select id, username, email, role_id, password from user where email = ?  and is_deleted != 1");
+            $query = $conn->prepare("select id, username, email, role_id, password from user where email = ? and is_deleted != 1");
             $query->bind_param('s', $email);
             $query->execute();
 
             $result = $query->get_result();
+            $row = $result->fetch_assoc();
 
-            if (!$result) {
+            if (!$row) {
                 header("HTTP/1.1 401 Unauthorized");
                 echo $conn->error;
             }
             else {
                 $password = $conn->real_escape_string($requestVariables['password']);
-                $row = $result->fetch_assoc();
                 $databasePassword = $row["password"];
                 if (password_verify($password, $databasePassword)) {
-                    $access = array('sub'=>$row["id"],'name'=>$row["username"], 'user_role_id'=>$row["role_id"], 'exp'=>(time() + 1800));
+                    $access = array('sub'=>$row["id"],'name'=>$row["username"], 'user_role_id'=>$row["role_id"], 'exp'=>(time() + 18000));
                     $refresh = array('sub'=>$row["id"], 'exp'=>(time() + 18000000));
-
-                    echo json_encode(array("access" => generate_jwt($access), "refresh" => generate_jwt($refresh, "refreshSecret")));
+                    
                     header("HTTP/1.1 200 OK"); 
+                    echo json_encode(array("access" => generate_jwt($access), "refresh" => generate_jwt($refresh, "refreshSecret")));
                 }
                 else {
                     header("HTTP/1.1 401 Unauthorized");

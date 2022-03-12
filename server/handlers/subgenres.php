@@ -10,8 +10,6 @@
         if (!$result) {
             echo $conn -> error;
         }
-
-        // build a response array
         $api_response = array();
         
         while ($row = $result->fetch_assoc()) {
@@ -19,13 +17,10 @@
             array_push($api_response, $row);
         }
             
-        // encode the response as JSON
         $response = json_encode($api_response);
         
-        // echo out the response
-        echo $response;
-
         header("HTTP/1.1 200 OK");
+        echo $response;
     }
 
 
@@ -95,11 +90,10 @@
         $query = $conn->prepare($read);
         $query->bind_param("i", $subgenreId);
 
-        if ( $query->execute()) {
-            return true;
-            header("HTTP/1.1 200 OK");
+        if ($query->execute()) {
+            header("HTTP/1.1 204 OK");
         } else {
-            return false;
+            header("HTTP/1.1 500 Internal Server Error");
             echo $conn -> error;
         }
     }

@@ -4,9 +4,7 @@
 
   header("Content-Type: application/json");
 
-
   $pathInfo = @$_SERVER['PATH_INFO'] ? @$_SERVER['PATH_INFO'] : "";
-
   $routing = explode("/", $pathInfo);
 
   if (count($routing) > 1) {
@@ -17,12 +15,28 @@
         include ("./handlers/artists.php");
         break;
       case 'albums':
+        if (count($routing) >= 4 && strtolower($routing[3]) == "reviews") {
+          include ("./handlers/reviews.php");
+          break;
+        } 
         include ("./handlers/albums.php");
         break;
       case 'users':
+        if (count($routing) >= 3 && strtolower($routing[2]) == "albums") {
+          include ("./handlers/userAlbums.php");
+          break;
+        } 
         include ("./handlers/users.php");
         break;
-        case 'reviews':
+      case 'reviews':
+        if (count($routing) >= 3 && strtolower($routing[2]) == "statuses") {
+          include ("./handlers/reviewStatuses.php");
+          break;
+        } 
+        header("HTTP/1.1 404 Not Found");
+        $handleRoute = false;
+        break;
+      case 'reviews':
         include ("./handlers/reviews.php");
         break;
       case 'genres':

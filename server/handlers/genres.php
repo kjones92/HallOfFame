@@ -11,7 +11,6 @@
             echo $conn -> error;
         }
 
-        // build a response array
         $api_response = array();
         
         while ($row = $result->fetch_assoc()) {
@@ -19,13 +18,10 @@
             array_push($api_response, $row);
         }
             
-        // encode the response as JSON
         $response = json_encode($api_response);
         
-        // echo out the response
-        echo $response;
-
         header("HTTP/1.1 200 OK");
+        echo $response;
     }
 
     function handlePost ($requestVariables) {
@@ -83,7 +79,6 @@
         }
     }
     
-
     function handleDelete($genreId) {
 
         include ("./utils/dbconn.php");
@@ -94,10 +89,9 @@
         $query->bind_param("i", $genreId);
 
         if ( $query->execute()) {
-            return true;
-            header("HTTP/1.1 200 OK");
+            header("HTTP/1.1 204 OK");
         } else {
-            return false;
+            header("HTTP/1.1 500 Internal Server Error");
             echo $conn -> error;
         }
     }

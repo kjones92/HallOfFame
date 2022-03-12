@@ -20,9 +20,8 @@
             
         $response = json_encode($api_response);
         
-        echo $response;
-
         header("HTTP/1.1 200 OK");
+        echo $response;
     }
 
     function handlePost ($requestVariables) {
@@ -93,10 +92,9 @@
         $query->bind_param("i", $artistId);
 
         if ( $query->execute()) {
-            return true;
-            header("HTTP/1.1 200 OK");
+            header("HTTP/1.1 204 OK");
         } else {
-            return false;
+            header("HTTP/1.1 500 Internal Server Error");
             echo $conn -> error;
         }
     }

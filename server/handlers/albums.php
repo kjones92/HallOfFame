@@ -1,4 +1,6 @@
 <?php
+
+    //GET FUNCTION not working
     function handleGet() {
 
         include ("./utils/dbconn.php");
@@ -33,20 +35,24 @@
         echo $response;
     }
 
+    //Katrina code - issue with duplicates (I think due to multiple subgenres) 
+    //add review score 
+    //grab the reviews, get the average score and add to the response. 
+    //Add review score to the album get single API 
+    //grab the reviews, get the average score and add to the response. 
+
     function handleGetSingle($albumId) {
 
         include ("./utils/dbconn.php");
     
-        $read = " SELECT album.*, a.name artist_name, a.ranking, g.description genre, sg.description subgenre FROM album
-        left outer join artist_album aa on album.id = aa.album_id
-        left outer join artist a on aa.artist_id = a.id
-
-        left outer join album_genre ag on album.id = ag.album_id
-        left outer join genre g on ag.genre_id = g.id
-
-        left outer join album_subgenre asg on album.id = asg.album_id
-        left outer join subgenre sg on asg.subgenre_id = sg.id
-        where album.id = ?; ";
+        $read = " SELECT album.*, a.name artist_name, g.description genre, sg.description subgenre FROM album
+            left outer join artist_album aa on album.id = aa.album_id
+            left outer join artist a on aa.artist_id = a.id
+            left outer join album_genre ag on album.id = ag.album_id
+            left outer join genre g on ag.genre_id = g.id
+            left outer join album_subgenre asg on album.id = asg.album_id
+            left outer join subgenre sg on asg.subgenre_id = sg.id
+            where album.id = ?; ";
         
         $query = $conn->prepare($read);
         $query->bind_param("i", $albumId);
@@ -59,15 +65,29 @@
         }
 
         $row = $result->fetch_assoc();
+        if($row != null) {
 
-        $response = json_encode($row);
+            $average = "select avg(score) score from review where album_id = ?;";
+            $averageQuery = $conn->prepare($average);
+            $averageQuery->bind_param("i", $albumId);
+            $averageQuery->execute();
 
-        echo $response;
+            $averageResult = $averageQuery->get_result();
+            $averageRow = $averageResult->fetch_assoc();
 
-        header("HTTP/1.1 200 OK");
+            $row = (array)$row;
+            $row['score'] =  $averageRow['score'];
+            $row = (object)$row;
+
+            header("HTTP/1.1 200 OK");
+            
+            echo json_encode($row);
+        } else {
+            header("HTTP/1.1 204 No Content");
+        }
+     
     }
- 
-
+    
     function handlePost ($requestVariables) {
 
         if ((!isset($requestVariables['title'])) || (!isset($requestVariables['year'])) || (!isset($requestVariables['artistId'])) 
@@ -197,10 +217,9 @@
         $query->bind_param("i", $albumId);
 
         if ( $query->execute()) {
-            return true;
-            header("HTTP/1.1 200 OK");
+            header("HTTP/1.1 204 OK");
         } else {
-            return false;
+            header("HTTP/1.1 500 Internal Server Error");
             echo $conn -> error;
         }
     }

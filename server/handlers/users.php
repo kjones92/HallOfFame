@@ -19,8 +19,8 @@
             
         $response = json_encode($api_response);
         
-        echo $response;
         header("HTTP/1.1 200 OK");
+        echo $response;
     }
 
     function handleGetSingle($userId) {
@@ -42,9 +42,9 @@
 
         $row = $result->fetch_assoc();
         $response = json_encode($row);
-
-        echo $response;
+        
         header("HTTP/1.1 200 OK");
+        echo $response;
     }
 
 
@@ -53,7 +53,6 @@
         if ((!isset($requestVariables['username'])) || (!isset($requestVariables['email'])) || (!isset($requestVariables['password'])) || (!isset($requestVariables['user_role_id']) )) {
             header("HTTP/1.1 400 Bad Request");
             echo "Profile information is required";  
-
         }
         else {
             include ("./utils/dbconn.php");
@@ -99,7 +98,6 @@
         if ((!isset($requestVariables['username'])) || (!isset($requestVariables['email'])) || (!isset($requestVariables['password'])) || (!isset($requestVariables['user_role_id']) )) {
             header("HTTP/1.1 400 Bad Request");
             echo "Profile information is required";  
-
         }
         else {
             include ("./utils/dbconn.php");
@@ -150,8 +148,9 @@
         $query->bind_param("i", $userId);
 
         if ( $query->execute()) {
-            header("HTTP/1.1 201 No Content");
+            header("HTTP/1.1 204 OK");
         } else {
+            header("HTTP/1.1 500 Internal Server Error");
             echo $conn -> error;
         }
     }
