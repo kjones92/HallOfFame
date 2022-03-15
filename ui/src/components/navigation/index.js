@@ -98,7 +98,7 @@ const logout = () => {
   // logout handled here later.
 };
 
-const MainNavigation = () => {
+const Navigation = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -197,9 +197,8 @@ const MainNavigation = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {isAdmin &&
               adminPages.map(({ display, nav }) => (
-                <Link to={nav} style={{ textDecoration: "none" }}>
+                <Link key={nav} to={nav} style={{ textDecoration: "none" }}>
                   <Button
-                    key={nav}
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                   >
@@ -280,4 +279,4 @@ const MainNavigation = () => {
     </AppBar>
   );
 };
-export default MainNavigation;
+export default Navigation;

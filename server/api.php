@@ -1,8 +1,9 @@
 <?php
   $handleRoute = true;
-  include ("./utils/jwt.php");
+  include("./utils/jwt.php");
 
   header("Content-Type: application/json");
+  header("Access-Control-Allow-Origin: *");
 
   $pathInfo = @$_SERVER['PATH_INFO'] ? @$_SERVER['PATH_INFO'] : "";
   $routing = explode("/", $pathInfo);
@@ -12,41 +13,44 @@
     $route = $routing[1];
     switch (strtolower($route)) {
       case 'artists':
-        include ("./handlers/artists.php");
+        include("./handlers/artists.php");
         break;
       case 'albums':
         if (count($routing) >= 4 && strtolower($routing[3]) == "reviews") {
-          include ("./handlers/reviews.php");
+          include("./handlers/reviews.php");
           break;
-        } 
-        include ("./handlers/albums.php");
+        }
+        if ($_SERVER['REQUEST_METHOD'] == "GET") {
+          $requiresAuth = false;
+        }
+        include("./handlers/albums.php");
         break;
       case 'users':
         if (count($routing) >= 3 && strtolower($routing[2]) == "albums") {
-          include ("./handlers/userAlbums.php");
+          include("./handlers/userAlbums.php");
           break;
-        } 
-        include ("./handlers/users.php");
+        }
+        include("./handlers/users.php");
         break;
       case 'reviews':
         if (count($routing) >= 3 && strtolower($routing[2]) == "statuses") {
-          include ("./handlers/reviewStatuses.php");
+          include("./handlers/reviewStatuses.php");
           break;
-        } 
+        }
         header("HTTP/1.1 404 Not Found");
         $handleRoute = false;
         break;
       case 'reviews':
-        include ("./handlers/reviews.php");
+        include("./handlers/reviews.php");
         break;
       case 'genres':
-        include ("./handlers/genres.php");
+        include("./handlers/genres.php");
         break;
       case 'subgenres':
-        include ("./handlers/subgenres.php");
+        include("./handlers/subgenres.php");
         break;
       case 'login':
-        include ("./handlers/login.php");
+        include("./handlers/login.php");
         $requiresAuth = false;
         break;
       default:
@@ -59,13 +63,10 @@
       $headers = apache_request_headers();
       if ($requiresAuth && (!array_key_exists('Authorization', $headers) || !is_jwt_valid(getBearerToken($headers["Authorization"])))) {
         header("HTTP/1.1 401 Unauthorized");
-      }
-      else {
+      } else {
         handle($routing);
       }
-    } 
-  }
-  else {
+    }
+  } else {
     header("HTTP/1.1 404 Not Found");
   }
-?>

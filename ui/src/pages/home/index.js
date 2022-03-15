@@ -6,7 +6,6 @@ const Albums = () => {
   const [albums, setAlbums] = useState([]);
 
   const getAlbumsData = async () => {
-    debugger;
     AlbumsService.getAllAlbums().then((data) => setAlbums(data));
   };
 
@@ -18,10 +17,13 @@ const Albums = () => {
     <>
       <Title title="Top 500" />
       <table>
-        <tr>name</tr>
-        {albums.map((album) => (
-          <td>{album.name}</td>
-        ))}
+        <tbody>
+          {albums.map((album, i) => (
+            <tr key={i}>
+              <td>{album.title}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </>
   );

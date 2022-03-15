@@ -1,6 +1,5 @@
 <?php
 
-    //GET FUNCTION not working
     function handleGet() {
 
         include ("./utils/dbconn.php");
@@ -34,12 +33,6 @@
 
         echo $response;
     }
-
-    //Katrina code - issue with duplicates (I think due to multiple subgenres) 
-    //add review score 
-    //grab the reviews, get the average score and add to the response. 
-    //Add review score to the album get single API 
-    //grab the reviews, get the average score and add to the response. 
 
     function handleGetSingle($albumId) {
 
