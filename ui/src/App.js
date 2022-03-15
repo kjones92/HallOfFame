@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { Layout, Navigation } from "./components";
+
+import { Route, Routes, Navigate } from "react-router-dom";
+import {
+  Home,
+  PendingReviews,
+  Users,
+  Albums,
+  Profile,
+  Favourite,
+  Owned,
+} from "./pages";
+import { NavigationRoutes } from "./constants";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navigation />
+      <Layout>
+        <Routes>
+          <Route path={NavigationRoutes.Home} exact={true} element={<Home />} />
+          <Route
+            path={NavigationRoutes.PendingReviews}
+            element={<PendingReviews />}
+          />
+          <Route path={NavigationRoutes.Users} element={<Users />} />
+          <Route path={NavigationRoutes.Albums} element={<Albums />} />
+          <Route path={NavigationRoutes.Profile} element={<Profile />} />
+          <Route path={NavigationRoutes.Favourite} element={<Favourite />} />
+          <Route path={NavigationRoutes.Owned} element={<Owned />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Layout>
+    </>
   );
 }
 
