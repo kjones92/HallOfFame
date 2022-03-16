@@ -9,10 +9,11 @@ function authReducer(state, action) {
       return {
         accessToken: action.accessToken,
         refreshToken: action.refreshToken,
+        ...state,
       };
     }
     case "logout": {
-      return {};
+      return initialState;
     }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
