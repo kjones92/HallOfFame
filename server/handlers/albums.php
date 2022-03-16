@@ -5,7 +5,7 @@ function handleGet()
 
     include("./utils/dbconn.php");
 
-    $read = "SELECT alb.title album, a.name artist, alb.year, alb.ranking,  GROUP_CONCAT(g.description) genre, GROUP_CONCAT(sg.description) subgenre
+    $read = "SELECT alb.id album_id, alb.title album, a.name artist, alb.year, alb.ranking,  GROUP_CONCAT(DISTINCT g.description SEPARATOR ', ') genre, GROUP_CONCAT(DISTINCT sg.description SEPARATOR ', ') subgenre
         FROM album alb
         left outer join artist_album aa on alb.id = aa.album_id
         left outer join artist a on aa.artist_id = a.id
@@ -15,7 +15,7 @@ function handleGet()
 
         left outer join album_subgenre asg on alb.id = asg.album_id
         left outer join subgenre sg on asg.subgenre_id = sg.id
-        group by alb.title, a.name, alb.year, alb.ranking
+        group by alb.id, alb.title, a.name, alb.year, alb.ranking
         order by ranking asc;";
 
     $result = $conn->query($read);
@@ -43,7 +43,7 @@ function handleGetSingle($albumId)
 
     include("./utils/dbconn.php");
 
-    $read = "SELECT alb.title album, a.name artist, alb.year, alb.ranking,  GROUP_CONCAT(g.description) genre, GROUP_CONCAT(sg.description) subgenre
+    $read = "SELECT alb.id album_id, alb.title album, a.name artist, alb.year, alb.ranking, GROUP_CONCAT(DISTINCT g.description SEPARATOR ', ') genre, GROUP_CONCAT(DISTINCT sg.description SEPARATOR ', ') subgenre
         FROM album alb
         left outer join artist_album aa on alb.id = aa.album_id
         left outer join artist a on aa.artist_id = a.id
@@ -53,8 +53,9 @@ function handleGetSingle($albumId)
 
         left outer join album_subgenre asg on alb.id = asg.album_id
         left outer join subgenre sg on asg.subgenre_id = sg.id
+
         where alb.id = ?
-        group by alb.title, a.name, alb.year, alb.ranking;";
+        group by alb.id, alb.title, a.name, alb.year, alb.ranking;";
 
     $query = $conn->prepare($read);
     $query->bind_param("i", $albumId);

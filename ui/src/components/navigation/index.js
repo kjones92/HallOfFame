@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  Link,
+  createSearchParams,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import {
   IconButton,
   Typography,
@@ -18,6 +23,8 @@ import { styled, alpha } from "@mui/material/styles";
 import { Search, Person } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { NavigationRoutes } from "../../constants";
+import { AuthContext } from "../../contexts";
+import { LoginUtils } from "../../utils";
 
 const adminPages = [
   {
@@ -48,9 +55,6 @@ const settings = [
     nav: NavigationRoutes.Owned,
   },
 ];
-
-const isLoggedIn = true;
-const isAdmin = true;
 
 const SearchEntry = styled("div")(({ theme }) => ({
   position: "relative",
@@ -99,6 +103,39 @@ const logout = () => {
 };
 
 const Navigation = () => {
+  const { state } = AuthContext.useLogin();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const loggedIn =
+      state.accessToken && LoginUtils.isExpiredtoken(state.accessToken);
+
+    setIsLoggedIn(loggedIn);
+    setIsAdmin(
+      state.accessToken &&
+        loggedIn &&
+        LoginUtils.isExpiredtoken(state.accessToken)
+    );
+  }, [state]);
+
+  const searchPerformed = (e) => {
+    if (e.key === "Enter" && e.target.value && e.target.value.length > 1) {
+      navigate({
+        pathname: NavigationRoutes.Home,
+        search: createSearchParams({
+          album: e.target.value,
+        }).toString(),
+      });
+
+      if (location.pathname == NavigationRoutes.Home) {
+        navigate(0);
+      }
+    }
+  };
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -214,8 +251,9 @@ const Navigation = () => {
                 <Search />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search…"
+                placeholder="Search Album"
                 inputProps={{ "aria-label": "search" }}
+                onKeyDown={searchPerformed}
               />
             </SearchEntry>
 

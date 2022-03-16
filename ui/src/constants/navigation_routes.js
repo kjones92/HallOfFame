@@ -6,4 +6,6 @@ export default {
   Favourite: "/favourite",
   Owned: "/owned",
   Home: "/",
+  AlbumDetails: "/album/:albumId",
+  Login: "/login",
 };

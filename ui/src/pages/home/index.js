@@ -1,6 +1,55 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Title } from "../../components";
+import { DataGrid } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
 import AlbumsService from "../../services/albums";
+import { NavigationUtils } from "../../utils";
+import { NavigationRoutes } from "../../constants";
+import { Link } from "react-router-dom";
+
+const columns = [
+  {
+    field: "ranking",
+    headerName: "Ranking",
+    type: "number",
+    width: 160,
+  },
+  { field: "album", headerName: "Album", width: 300 },
+  { field: "artist", headerName: "Artist", width: 150 },
+  { field: "year", headerName: "Year", width: 80 },
+  {
+    field: "genre",
+    headerName: "Genre",
+    sortable: false,
+    width: 200,
+  },
+  {
+    field: "subgenre",
+    headerName: "Subgenre",
+    sortable: false,
+    width: 300,
+  },
+  {
+    disableColumnMenu: true,
+    flex: 0.5,
+    sortable: false,
+    field: "actions",
+    headerName: "Actions",
+    renderCell: (params) => {
+      const navigationTarget = NavigationUtils.replacePathNavigation(
+        NavigationRoutes.AlbumDetails,
+        params.id?.toString() ?? ""
+      );
+
+      return (
+        <Button component={Link} to={navigationTarget} color="inherit">
+          View
+        </Button>
+      );
+    },
+  },
+];
 
 const Albums = () => {
   const [albums, setAlbums] = useState([]);
@@ -13,18 +62,35 @@ const Albums = () => {
     getAlbumsData();
   }, []);
 
+  const [searchParams] = useSearchParams();
+  const album = searchParams.get("album");
+
   return (
     <>
       <Title title="Top 500" />
-      <table>
-        <tbody>
-          {albums.map((album, i) => (
-            <tr key={i}>
-              <td>{album.title}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div style={{ height: "900px", width: "100%" }}>
+        <DataGrid
+          rows={albums}
+          columns={columns}
+          getRowId={(row) => row.album_id}
+          disableSelectionOnClick
+          initialState={
+            album && {
+              filter: {
+                filterModel: {
+                  items: [
+                    {
+                      columnField: "album",
+                      operatorValue: "contains",
+                      value: album,
+                    },
+                  ],
+                },
+              },
+            }
+          }
+        />
+      </div>
     </>
   );
 };

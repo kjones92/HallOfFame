@@ -5,3 +5,5 @@ export { default as Albums } from "./albums";
 export { default as Profile } from "./profile";
 export { default as Favourite } from "./favourite";
 export { default as Owned } from "./owned";
+export { default as AlbumDetails } from "./album_details";
+export { default as Login } from "./login";
