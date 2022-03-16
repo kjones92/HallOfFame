@@ -2210,8 +2210,6 @@ INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (48, 3
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (49, 39, 49);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (50, 40, 50);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (51, 41, 51);
-INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (52, 61, 52);
-INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (53, 46, 52);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (54, 42, 52);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (55, 1, 53);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (56, 43, 54);
@@ -2221,9 +2219,7 @@ INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (59, 1
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (60, 5, 58);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (61, 44, 59);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (62, 45, 60);
-INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (63, 61, 61);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (64, 46, 61);
-INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (65, 42, 61);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (66, 47, 62);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (67, 21, 63);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (68, 5, 64);
@@ -2299,8 +2295,6 @@ INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (137, 
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (138, 85, 134);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (139, 86, 135);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (140, 61, 136);
-INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (141, 46, 136);
-INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (142, 42, 136);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (143, 87, 137);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (144, 88, 138);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (145, 89, 139);
@@ -2405,7 +2399,6 @@ INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (243, 
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (244, 101, 238);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (245, 118, 239);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (246, 94, 240);
-INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (247, 1, 241);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (248, 87, 241);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (249, 77, 242);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (250, 84, 243);
@@ -2558,7 +2551,6 @@ INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (396, 
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (397, 223, 390);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (398, 214, 391);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (399, 1, 392);
-INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (400, 87, 392);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (401, 224, 393);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (402, 187, 394);
 INSERT INTO greatest_albums.artist_album (id, artist_id, album_id) VALUES (403, 225, 395);
