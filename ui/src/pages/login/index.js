@@ -2,10 +2,11 @@ import react, { useState } from "react";
 import { Title } from "../../components";
 import { Paper, Stack, Container, TextField, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NavigationRoutes } from "../../constants";
-import LoginService from "../../services/login";
+import { LoginService, TokenService } from "../../services";
 import { AuthContext } from "../../contexts";
+import toast from "react-hot-toast";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -19,13 +20,20 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { dispatch } = AuthContext.useLogin();
+  const navigate = useNavigate();
 
   const loginClicked = async () => {
     const loginResult = await LoginService.login(email, password);
-    dispatch({
-      type: "login",
-      ...loginResult,
-    });
+    if (loginResult) {
+      TokenService.setAuth(loginResult);
+      dispatch({
+        type: "login",
+        ...loginResult,
+      });
+      navigate(NavigationRoutes.Home);
+    } else {
+      toast.error("Login Failed");
+    }
   };
 
   //Katrina code to check

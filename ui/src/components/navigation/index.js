@@ -5,6 +5,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 import {
   IconButton,
   Typography,
@@ -25,6 +26,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { NavigationRoutes } from "../../constants";
 import { AuthContext } from "../../contexts";
 import { LoginUtils } from "../../utils";
+import { TokenService } from "../../services";
 
 const adminPages = [
   {
@@ -98,23 +100,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const logout = () => {
-  // logout handled here later.
-};
-
 const Navigation = () => {
-  const { state } = AuthContext.useLogin();
+  const { state, dispatch } = AuthContext.useLogin();
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    const loggedIn =
-      state.accessToken && !LoginUtils.isTokenExpired(state.accessToken);
+  const logout = () => {
+    dispatch({ type: "logout" });
+    TokenService.removeAuth();
+    navigate(NavigationRoutes.Home);
+    toast.success("Logout Successful!");
+  };
 
+  useEffect(() => {
+    const loggedIn = state.access && !LoginUtils.isTokenExpired(state);
+    handleCloseUserMenu();
     setIsLoggedIn(loggedIn);
-    setIsAdmin(loggedIn && LoginUtils.isAdminUser(state.accessToken));
+    setIsAdmin(loggedIn && LoginUtils.isAdminUser(state.access));
+    const username = loggedIn ? LoginUtils.getUsername(state.access) : null;
+    setUsername(username);
   }, [state]);
 
   const searchPerformed = (e) => {
@@ -136,13 +143,16 @@ const Navigation = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
-  const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
 
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
   return (
     <AppBar position="static">
+      <Toaster />
       <Container maxWidth="xxl">
         <Toolbar disableGutters>
           <Link
@@ -257,7 +267,7 @@ const Navigation = () => {
               <>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar>KJ</Avatar>
+                    <Avatar>{username?.charAt(0).toUpperCase()} </Avatar>
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -290,12 +300,7 @@ const Navigation = () => {
                       </Link>
                     </MenuItem>
                   ))}
-                  <MenuItem
-                    key="logout"
-                    onClick={() => {
-                      alert("Logout clicked");
-                    }}
-                  >
+                  <MenuItem key="logout" onClick={logout}>
                     Logout
                   </MenuItem>
                 </Menu>

@@ -42,25 +42,6 @@ const columns = [
     sortable: false,
     width: 300,
   },
-  {
-    disableColumnMenu: true,
-    flex: 0.5,
-    sortable: false,
-    field: "actions",
-    headerName: "Actions",
-    renderCell: (params) => {
-      const navigationTarget = NavigationUtils.replacePathNavigation(
-        NavigationRoutes.AlbumDetails,
-        params.id?.toString() ?? ""
-      );
-
-      return (
-        <Button component={Link} to={navigationTarget} color="inherit">
-          View
-        </Button>
-      );
-    },
-  },
 ];
 
 const OwnedAlbums = () => {
@@ -89,7 +70,7 @@ const OwnedAlbums = () => {
         </Grid>
         <Grid item xs={4} style={{ alignSelf: "center", textAlign: "end" }}>
           <Button variant="contained" onClick={() => addAlbumClicked()}>
-            Add Album
+            Add Owned
           </Button>
         </Grid>
       </Grid>

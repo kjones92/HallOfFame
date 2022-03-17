@@ -1,5 +1,4 @@
 import { Layout, Navigation } from "./components";
-import { AuthContext } from "./contexts";
 import { Route, Routes, Navigate } from "react-router-dom";
 import {
   Home,
@@ -14,25 +13,43 @@ import {
   CreateAccount,
 } from "./pages";
 import { NavigationRoutes } from "./constants";
+import { AuthContext } from "./contexts";
+import { LoginUtils } from "./utils";
 
-// we need to set authenticated and unauthenticated routes.
+const adminRoutes = () => {
+  return (
+    <>
+      <Route path={NavigationRoutes.Users} element={<Users />} />
+      <Route path={NavigationRoutes.Albums} element={<Albums />} />
+      <Route
+        path={NavigationRoutes.PendingReviews}
+        element={<PendingReviews />}
+      />
+    </>
+  );
+};
+
+const loggedInRoutes = () => {
+  return (
+    <>
+      <Route path={NavigationRoutes.Profile} element={<Profile />} />
+      <Route path={NavigationRoutes.Favourite} element={<Favourite />} />
+      <Route path={NavigationRoutes.Owned} element={<Owned />} />
+    </>
+  );
+};
 
 function App() {
+  const { state } = AuthContext.useLogin();
+  const loggedIn = state.access && !LoginUtils.isTokenExpired(state);
+  const isAdminUser = loggedIn && LoginUtils.isAdminUser(state.access);
+
   return (
-    <AuthContext.AuthProvider>
+    <>
       <Navigation />
       <Layout>
         <Routes>
           <Route path={NavigationRoutes.Home} element={<Home />} />
-          <Route
-            path={NavigationRoutes.PendingReviews}
-            element={<PendingReviews />}
-          />
-          <Route path={NavigationRoutes.Users} element={<Users />} />
-          <Route path={NavigationRoutes.Albums} element={<Albums />} />
-          <Route path={NavigationRoutes.Profile} element={<Profile />} />
-          <Route path={NavigationRoutes.Favourite} element={<Favourite />} />
-          <Route path={NavigationRoutes.Owned} element={<Owned />} />
           <Route path={NavigationRoutes.Login} element={<Login />} />
           <Route
             path={NavigationRoutes.CreateAccount}
@@ -42,11 +59,12 @@ function App() {
             path={NavigationRoutes.AlbumDetails}
             element={<AlbumDetails />}
           />
-
+          {loggedIn && loggedInRoutes()}
+          {isAdminUser && adminRoutes()}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Layout>
-    </AuthContext.AuthProvider>
+    </>
   );
 }
 

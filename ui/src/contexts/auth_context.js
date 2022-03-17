@@ -1,20 +1,19 @@
 import React, { createContext, useReducer } from "react";
+import { TokenService } from "../services";
 
 const AuthContext = createContext();
-const initialState = {};
 
 function authReducer(state, action) {
-  debugger;
   switch (action.type) {
     case "login": {
       return {
         ...state,
-        accessToken: action.access,
-        refreshToken: action.refresh,
+        access: action.access,
+        refresh: action.refresh,
       };
     }
     case "logout": {
-      return initialState;
+      return {};
     }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
@@ -23,7 +22,9 @@ function authReducer(state, action) {
 }
 
 function AuthProvider({ children }) {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const auth = TokenService.getAuth() ?? {};
+
+  const [state, dispatch] = useReducer(authReducer, auth);
   const value = { state, dispatch };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

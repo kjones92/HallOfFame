@@ -1,27 +1,49 @@
 import jwtDecode from "jwt-decode";
 
 const isTokenExpired = (token) => {
-  if (typeof token !== "string" || !token)
-    throw new Error("Invalid token provided");
+  if (!token || !token.access || !token.refresh) return true;
 
-  const { exp } = jwtDecode(token);
+  const accessToken = jwtDecode(token.access);
   const currentTime = new Date().getTime() / 1000;
 
-  return currentTime > exp;
+  if (currentTime < accessToken.exp) return false;
+
+  const refreshToken = jwtDecode(token.refresh);
+
+  if (currentTime < refreshToken.exp) return false;
+
+  return true;
 };
 
-const isAdminUser = (token) => {
-  if (typeof token !== "string" || !token)
-    throw new Error("Invalid token provided");
+const isAdminUser = (access) => {
+  if (typeof access !== "string" || !access) return false;
 
-  const { user_role_id } = jwtDecode(token);
+  const { user_role_id } = jwtDecode(access);
 
   return user_role_id === 1;
+};
+
+const getUsername = (access) => {
+  if (typeof access !== "string" || !access) return false;
+
+  const { name } = jwtDecode(access);
+
+  return name;
+};
+
+const getUserId = (access) => {
+  if (typeof access !== "string" || !access) return false;
+
+  const { sub } = jwtDecode(access);
+
+  return sub;
 };
 
 const LoginUtils = {
   isTokenExpired,
   isAdminUser,
+  getUsername,
+  getUserId,
 };
 
 export default LoginUtils;
