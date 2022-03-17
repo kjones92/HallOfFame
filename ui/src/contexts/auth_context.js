@@ -4,12 +4,13 @@ const AuthContext = createContext();
 const initialState = {};
 
 function authReducer(state, action) {
+  debugger;
   switch (action.type) {
     case "login": {
       return {
-        accessToken: action.accessToken,
-        refreshToken: action.refreshToken,
         ...state,
+        accessToken: action.access,
+        refreshToken: action.refresh,
       };
     }
     case "logout": {

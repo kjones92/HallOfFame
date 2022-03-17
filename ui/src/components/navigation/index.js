@@ -111,14 +111,10 @@ const Navigation = () => {
 
   useEffect(() => {
     const loggedIn =
-      state.accessToken && LoginUtils.isExpiredtoken(state.accessToken);
+      state.accessToken && !LoginUtils.isTokenExpired(state.accessToken);
 
     setIsLoggedIn(loggedIn);
-    setIsAdmin(
-      state.accessToken &&
-        loggedIn &&
-        LoginUtils.isExpiredtoken(state.accessToken)
-    );
+    setIsAdmin(loggedIn && LoginUtils.isAdminUser(state.accessToken));
   }, [state]);
 
   const searchPerformed = (e) => {

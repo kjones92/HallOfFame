@@ -8,4 +8,5 @@ export default {
   Home: "/",
   AlbumDetails: "/album/:albumId",
   Login: "/login",
+  CreateAccount: "/users/create",
 };

@@ -11,6 +11,7 @@ import {
   Owned,
   AlbumDetails,
   Login,
+  CreateAccount,
 } from "./pages";
 import { NavigationRoutes } from "./constants";
 
@@ -33,6 +34,10 @@ function App() {
           <Route path={NavigationRoutes.Favourite} element={<Favourite />} />
           <Route path={NavigationRoutes.Owned} element={<Owned />} />
           <Route path={NavigationRoutes.Login} element={<Login />} />
+          <Route
+            path={NavigationRoutes.CreateAccount}
+            element={<CreateAccount />}
+          />
           <Route
             path={NavigationRoutes.AlbumDetails}
             element={<AlbumDetails />}
