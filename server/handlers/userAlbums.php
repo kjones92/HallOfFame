@@ -33,6 +33,21 @@
     }
 
 
+    function handleGet() {
+
+        include ("./utils/dbconn.php");
+
+        $headers = apache_request_headers();
+        $userId = extractUserId(getBearerToken($headers["Authorization"]));
+        $favourite = (isset($_GET["favourite"]) && trim($_GET["favourite"]) == 'true');
+        $owned = (isset($_GET["favourite"]) && trim($_GET["favourite"]) == 'true');
+    
+
+        // add a query to get user albums for favourite or owned.
+    }
+
+
+
     function handlePut ($albumId, $requestVariables) {
 
         if ((!isset($requestVariables['is_favourite'])) || (!isset($requestVariables['is_owned']))) {
@@ -102,4 +117,3 @@
             header("HTTP/1.1 404 Not Found"); 
         }
     }
-?>

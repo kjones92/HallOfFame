@@ -95,7 +95,7 @@
 
     function handlePut ($userId, $requestVariables) {
 
-        if ((!isset($requestVariables['username'])) || (!isset($requestVariables['email'])) || (!isset($requestVariables['password'])) || (!isset($requestVariables['user_role_id']) )) {
+        if ((!isset($requestVariables['username'])) || (!isset($requestVariables['email'])) || (!isset($requestVariables['password']) && $requestVariables['password'] != "") || (!isset($requestVariables['user_role_id']) )) {
             header("HTTP/1.1 400 Bad Request");
             echo "Profile information is required";  
         }

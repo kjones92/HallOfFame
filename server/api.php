@@ -4,11 +4,17 @@
 
   header("Content-Type: application/json");
   header("Access-Control-Allow-Origin: *");
+  header("Access-Control-Allow-Headers: *");
+
+  header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+
 
   $pathInfo = @$_SERVER['PATH_INFO'] ? @$_SERVER['PATH_INFO'] : "";
   $routing = explode("/", $pathInfo);
 
-  if (count($routing) > 1) {
+  if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+    header("HTTP/1.1 200 Ok");
+  } else if (count($routing) > 1) {
     $requiresAuth = true;
     $route = $routing[1];
     switch (strtolower($route)) {
@@ -70,3 +76,4 @@
   } else {
     header("HTTP/1.1 404 Not Found");
   }
+?>
