@@ -23,7 +23,7 @@ const getUser = async (userId) => {
 };
 
 const addUser = async (email, username, password, user_role_id) => {
-  await FetchInstance(`http://localhost:8080/api.php/users/`, {
+  return await FetchInstance(`http://localhost:8080/api.php/users/`, {
     method: "POST",
     body: JSON.stringify({ email, username, password, user_role_id }),
   });

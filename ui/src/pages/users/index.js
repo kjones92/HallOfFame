@@ -75,12 +75,24 @@ const Users = () => {
 
   const handleAddUser = async (e) => {
     try {
-      await UserService.addUser(email, username, password, userRoleId);
-      await getUserData();
-      toast.success("Successfully added user");
-      handleClose();
+      const response = await UserService.addUser(
+        email,
+        username,
+        password,
+        userRoleId
+      );
+      debugger;
+
+      if (response.status == 201) {
+        await getUserData();
+        toast.success("Successfully added user");
+        handleClose();
+      } else {
+        const errorMessage = await response.text();
+        toast.error(errorMessage);
+      }
     } catch {
-      toast.error("Some has gone wrong with adding a user");
+      toast.error("Something has gone wrong with adding a user");
     }
   };
 

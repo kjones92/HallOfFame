@@ -27,6 +27,7 @@
                 header("HTTP/1.1 200 OK"); 
                 echo json_encode(array("access" => generate_jwt($access)));
             }
+            $conn->close();
         }
         
     }
@@ -67,6 +68,7 @@
                     echo $conn->error;
                 }
             }
+            $conn->close();
         }
            
     }

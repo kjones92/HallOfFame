@@ -12,4 +12,4 @@
             $check = "Not connected ".$conn->connect_error;
 
       }
- ?>
+?>

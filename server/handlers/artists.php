@@ -22,6 +22,7 @@
         
         header("HTTP/1.1 200 OK");
         echo $response;
+        $conn->close();
     }
 
     function handlePost ($requestVariables) {
@@ -51,6 +52,8 @@
             else {
                 header("HTTP/1.1 201 Created");
             }
+
+            $conn->close();
         }
     }
 
@@ -79,6 +82,7 @@
             else {
                 header("HTTP/1.1 204 No Content");
             }
+            $conn->close();
         }
     }
 
@@ -97,6 +101,7 @@
             header("HTTP/1.1 500 Internal Server Error");
             echo $conn -> error;
         }
+        $conn->close();
     }
 
     function retrieveArtistId($routing) {
