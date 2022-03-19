@@ -2,7 +2,7 @@
     function handleGet() {
         include ("./utils/dbconn.php");
 
-        $read = "SELECT * FROM subgenre;";
+        $read = "SELECT * FROM subgenre order by description asc;";
         
         $result = $conn->query($read);
         

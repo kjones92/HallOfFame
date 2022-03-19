@@ -12,6 +12,14 @@ const getAllAlbums = async () => {
   }
 };
 
+const addAlbum = async (title, year, rank, artistId, genreId, subgenreId) => {
+  await FetchInstance(`http://localhost:8080/api.php/albums/`, {
+    method: "POST",
+    body: JSON.stringify({ title, year, rank, artistId, genreId, subgenreId }),
+  });
+};
+
 export default {
   getAllAlbums,
+  addAlbum,
 };

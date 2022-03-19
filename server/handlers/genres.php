@@ -3,7 +3,7 @@
 
         include ("./utils/dbconn.php");
 
-        $read = "SELECT * FROM genre;";
+        $read = "SELECT * FROM genre order by description asc;";
         
         $result = $conn->query($read);
         
@@ -143,4 +143,3 @@
             header("HTTP/1.1 404 Not Found"); 
         }
     }
-?>

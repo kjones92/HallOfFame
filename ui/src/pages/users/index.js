@@ -76,11 +76,11 @@ const Users = () => {
   const handleAddUser = async (e) => {
     try {
       await UserService.addUser(email, username, password, userRoleId);
+      await getUserData();
       toast.success("Successfully added user");
       handleClose();
-      await getUserData();
     } catch {
-      toast.success("Some has gone wrong with adding a user");
+      toast.error("Some has gone wrong with adding a user");
     }
   };
 

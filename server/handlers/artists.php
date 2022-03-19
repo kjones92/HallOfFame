@@ -3,7 +3,7 @@
 
         include ("./utils/dbconn.php");
 
-        $read = "SELECT * FROM artist;";
+        $read = "SELECT * FROM artist order by name asc;";
         
         $result = $conn->query($read);
         
