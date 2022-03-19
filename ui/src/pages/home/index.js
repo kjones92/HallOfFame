@@ -29,51 +29,6 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts";
 import toast from "react-hot-toast";
 
-const columns = [
-  {
-    field: "ranking",
-    headerName: "Ranking",
-    type: "number",
-    width: 160,
-  },
-  { field: "album", headerName: "Album", width: 300 },
-  { field: "artist", headerName: "Artist", width: 150 },
-  { field: "year", headerName: "Year", width: 80 },
-  {
-    field: "genre",
-    headerName: "Genre",
-    sortable: false,
-    width: 200,
-  },
-  {
-    field: "subgenre",
-    headerName: "Subgenre",
-    sortable: false,
-    width: 300,
-  },
-  {
-    disableColumnMenu: true,
-    flex: 0.5,
-    sortable: false,
-    field: "Actions",
-    headerName: "Actions",
-    renderCell: (params) => {
-      const navigationTarget = NavigationUtils.replacePathNavigation(
-        NavigationRoutes.AlbumDetails,
-        params.id?.toString() ?? ""
-      );
-
-      return (
-        <>
-          <Button component={Link} to={navigationTarget} color="inherit">
-            View
-          </Button>
-        </>
-      );
-    },
-  },
-];
-
 const Albums = () => {
   const { state } = AuthContext.useLogin();
   const [albums, setAlbums] = useState([]);
@@ -82,8 +37,10 @@ const Albums = () => {
   const [subgenres, setSubgenres] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [modelEditMode, setModelEditMode] = useState("");
   const [albumFilter, setAlbumFilter] = useState("");
 
+  const [editAlbumId, setEditAlbumId] = useState();
   const [title, setTitle] = useState();
   const [year, setYear] = useState();
   const [rank, setRank] = useState();
@@ -92,6 +49,7 @@ const Albums = () => {
   const [subgenreId, setSubGenreId] = useState();
 
   const handleClose = () => {
+    setEditAlbumId();
     setTitle();
     setYear();
     setRank();
@@ -101,9 +59,37 @@ const Albums = () => {
     setModalOpen(false);
   };
 
-  const handleClickOpen = () => setModalOpen(true);
+  const handleClickAdd = () => {
+    setModelEditMode("Add");
+    setModalOpen(true);
+  };
 
-  const handleAddAlbum = async (e) => {
+  const handleClickEdit = (albumId) => {
+    const selectedAlbum = albums.find((x) => x.album_id == albumId);
+    const artistText = selectedAlbum.artist.split(",")[0];
+    const genreText = selectedAlbum.genre.split(",")[0];
+    const subgenreText = selectedAlbum.subgenre.split(",")[0];
+
+    const selectedArtist = artists.find((x) => x.name == artistText);
+    const selectedGenre = genres.find((x) => x.description == genreText);
+    const selectedSubgenre = subgenres.find(
+      (x) => x.description == subgenreText
+    );
+
+    setEditAlbumId(albumId);
+    setTitle(selectedAlbum.album);
+    setYear(selectedAlbum.year);
+    setRank(selectedAlbum.ranking);
+
+    setArtistId(selectedArtist?.id);
+    setGenreId(selectedGenre?.id);
+    setSubGenreId(selectedSubgenre?.id);
+
+    setModelEditMode("Edit");
+    setModalOpen(true);
+  };
+
+  const handleAddAlbum = async () => {
     try {
       await AlbumService.addAlbum(
         title,
@@ -118,6 +104,25 @@ const Albums = () => {
       handleClose();
     } catch {
       toast.error("Some has gone wrong with adding a album");
+    }
+  };
+
+  const handleEditAlbum = async () => {
+    try {
+      await AlbumService.editAlbum(
+        editAlbumId,
+        title,
+        year,
+        rank,
+        artistId,
+        genreId,
+        subgenreId
+      );
+      await getAlbumsData();
+      toast.success("Successfully edited album");
+      handleClose();
+    } catch {
+      toast.error("Some has gone wrong with editing an album");
     }
   };
 
@@ -179,6 +184,59 @@ const Albums = () => {
     }
   };
 
+  const columns = [
+    {
+      field: "ranking",
+      headerName: "Ranking",
+      type: "number",
+      width: 160,
+    },
+    { field: "album", headerName: "Album", width: 300 },
+    { field: "artist", headerName: "Artist", width: 150 },
+    { field: "year", headerName: "Year", width: 80 },
+    {
+      field: "genre",
+      headerName: "Genre",
+      sortable: false,
+      width: 200,
+    },
+    {
+      field: "subgenre",
+      headerName: "Subgenre",
+      sortable: false,
+      width: 300,
+    },
+    {
+      disableColumnMenu: true,
+      flex: 0.5,
+      sortable: false,
+      field: "Actions",
+      headerName: "Actions",
+      renderCell: (params) => {
+        const navigationTarget = NavigationUtils.replacePathNavigation(
+          NavigationRoutes.AlbumDetails,
+          params.id?.toString() ?? ""
+        );
+
+        return (
+          <>
+            {isAdmin && (
+              <Button
+                onClick={() => handleClickEdit(params.id)}
+                color="inherit"
+              >
+                Edit
+              </Button>
+            )}
+            <Button component={Link} to={navigationTarget} color="inherit">
+              View
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
+
   return (
     <>
       <Grid container>
@@ -210,7 +268,7 @@ const Albums = () => {
             <Button
               variant="contained"
               style={{ marginLeft: 20, marginTop: 11 }}
-              onClick={() => handleClickOpen()}
+              onClick={() => handleClickAdd()}
             >
               Add Album
             </Button>
@@ -244,10 +302,10 @@ const Albums = () => {
         />
       </div>
       <Dialog open={modalOpen} onClose={handleClose}>
-        <DialogTitle>Add Album</DialogTitle>
+        <DialogTitle>{modelEditMode} Album</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please enter the details below to add an album:
+            Please enter the details below to {modelEditMode} an album:
           </DialogContentText>
           <TextField
             autoFocus
@@ -330,7 +388,13 @@ const Albums = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddAlbum}>Add</Button>
+          <Button
+            onClick={() => {
+              modelEditMode == "Edit" ? handleEditAlbum() : handleAddAlbum();
+            }}
+          >
+            {modelEditMode}
+          </Button>
         </DialogActions>
       </Dialog>
     </>

@@ -29,6 +29,13 @@ const addUser = async (email, username, password, user_role_id) => {
   });
 };
 
+const registerUser = async (email, username, password) => {
+  return await FetchInstance(`http://localhost:8080/api.php/users/register`, {
+    method: "POST",
+    body: JSON.stringify({ email, username, password }),
+  });
+};
+
 const saveUser = async (userId, email, username, password, user_role_id) => {
   try {
     const response = await FetchInstance(
@@ -62,4 +69,5 @@ export default {
   saveUser,
   deleteUser,
   getAllUsers,
+  registerUser,
 };

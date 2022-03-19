@@ -38,9 +38,32 @@ const addAlbum = async (title, year, rank, artistId, genreId, subgenreId) => {
   });
 };
 
+const editAlbum = async (
+  albumId,
+  title,
+  year,
+  rank,
+  artistId,
+  genreId,
+  subgenreId
+) => {
+  await FetchInstance(`http://localhost:8080/api.php/albums/${albumId}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      title,
+      year,
+      rank,
+      artistId,
+      genreId,
+      subgenreId,
+    }),
+  });
+};
+
 export default {
   getAllAlbums,
   addAlbum,
   getAlbum,
   deleteAlbum,
+  editAlbum,
 };

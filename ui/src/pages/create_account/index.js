@@ -1,21 +1,36 @@
-import react, { useState } from "react";
+import React, { useState } from "react";
 import { Title } from "../../components";
-import { Paper, Stack, Container, TextField, Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
+import { Stack, Container, TextField, Button } from "@mui/material";
+import { UserService } from "../../services";
+import { NavigationRoutes } from "../../constants";
+import toast from "react-hot-toast";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
-
-function CreateAccount() {
+const CreateAccount = () => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
-  const saveClicked = () => {
-    alert(`hello ${email}`);
+  const saveClicked = async () => {
+    if (password === confirmPassword) {
+      const response = await UserService.registerUser(
+        email,
+        username,
+        password
+      );
+      debugger;
+      if (response.status == 201) {
+        toast.success("Account created! You can now login.");
+        navigate(NavigationRoutes.Login);
+      } else {
+        const error = await response.text();
+        toast.error(error);
+      }
+    } else {
+      toast.error("Passwords must match!");
+    }
   };
 
   return (
@@ -35,18 +50,24 @@ function CreateAccount() {
             id="outlined-required"
             label="Username"
             type="username"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
           />
           <TextField
             required
             id="outlined-required"
             label="Password"
             type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
           />
           <TextField
             required
             id="outlined-required"
             label="Confirm Password"
             type="password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmPassword}
           />
           <Button variant="contained" onClick={() => saveClicked()}>
             Save
@@ -55,5 +76,5 @@ function CreateAccount() {
       </Container>
     </>
   );
-}
+};
 export default CreateAccount;
