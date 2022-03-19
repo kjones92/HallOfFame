@@ -34,7 +34,7 @@ function Login() {
         <Stack spacing={3}>
           <Alert severity="info">
             <p>
-              Why not try an admin account?
+              For demonstrative purposes why not try an admin account?
               <ul>
                 <li>
                   Email: <strong>root@qub.ac.uk</strong>
