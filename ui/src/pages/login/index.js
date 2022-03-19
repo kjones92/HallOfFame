@@ -1,20 +1,11 @@
-import react, { useState } from "react";
+import React, { useState } from "react";
 import { Title } from "../../components";
-import { Paper, Stack, Container, TextField, Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Stack, Container, TextField, Button, Alert } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { NavigationRoutes } from "../../constants";
 import { LoginService, TokenService } from "../../services";
 import { AuthContext } from "../../contexts";
 import toast from "react-hot-toast";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -36,16 +27,33 @@ function Login() {
     }
   };
 
-  //Katrina code to check
-  const createAccountClicked = () => {
-    console.log("Create Account");
-  };
-
   return (
     <>
       <Title title="Login" />
       <Container fixed>
-        <Stack spacing={2}>
+        <Stack spacing={3}>
+          <Alert severity="info">
+            <p>
+              Why not try an admin account?
+              <ul>
+                <li>
+                  Email: <strong>root@qub.ac.uk</strong>
+                </li>
+                <li>
+                  Password: <strong>Hello1234!</strong>
+                </li>
+              </ul>
+            </p>
+          </Alert>
+          <Alert severity="info">
+            <p>
+              Normal member accounts can be created with the{" "}
+              <strong>Create an account</strong> link below.
+            </p>
+          </Alert>
+        </Stack>
+
+        <Stack spacing={2} style={{ marginTop: 50 }}>
           <TextField
             required
             id="outlined-required"
