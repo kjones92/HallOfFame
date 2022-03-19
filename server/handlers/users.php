@@ -95,7 +95,7 @@
 
     function handlePut ($userId, $requestVariables) {
 
-        if ((!isset($requestVariables['username'])) || (!isset($requestVariables['email'])) || (!isset($requestVariables['password']) && $requestVariables['password'] != "") || (!isset($requestVariables['user_role_id']) )) {
+        if ((!isset($requestVariables['username'])) || (!isset($requestVariables['email'])) || (!isset($requestVariables['user_role_id']) )) {
             header("HTTP/1.1 400 Bad Request");
             echo "Profile information is required";  
         }
@@ -103,7 +103,7 @@
             include ("./utils/dbconn.php");
 
             $email = $conn->real_escape_string($requestVariables['email']);
-            $userExists = "SELECT id FROM user u where id = ? and is_deleted != 1;";
+            $userExists = "SELECT id, password FROM user u where id = ? and is_deleted != 1;";
             
             $userExistsQuery = $conn->prepare($userExists);
             $userExistsQuery->bind_param("i", $userId);
@@ -116,7 +116,11 @@
                 $name = $conn->real_escape_string($requestVariables['username']);
                 $password = $conn->real_escape_string($requestVariables['password']);
                 $roleId = $conn->real_escape_string($requestVariables['user_role_id']);
-                $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
+                $encryptedPassword = $row["password"];
+
+                if (isset($requestVariables['password']) && $requestVariables['password'] != ""){
+                    $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
+                }
 
                 $query = $conn->prepare("UPDATE user set username = ?, email = ?, password = ?, role_id = ? where id = ?");
                 $query->bind_param('sssii', $name, $email, $encryptedPassword, $roleId, $userId);
@@ -209,4 +213,3 @@
             header("HTTP/1.1 404 Not Found"); 
         }
     }
-?>

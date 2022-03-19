@@ -22,6 +22,13 @@ const getUser = async (userId) => {
   }
 };
 
+const addUser = async (email, username, password, user_role_id) => {
+  await FetchInstance(`http://localhost:8080/api.php/users/`, {
+    method: "POST",
+    body: JSON.stringify({ email, username, password, user_role_id }),
+  });
+};
+
 const saveUser = async (userId, email, username, password, user_role_id) => {
   try {
     const response = await FetchInstance(
@@ -50,6 +57,7 @@ const deleteUser = async (userId) => {
 };
 
 export default {
+  addUser,
   getUser,
   saveUser,
   deleteUser,

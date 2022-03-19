@@ -44,14 +44,14 @@ const settings = [
     display: "Profile",
     nav: NavigationRoutes.Profile,
   },
-  {
-    display: "Favourite Albums",
-    nav: NavigationRoutes.Favourite,
-  },
-  {
-    display: "Owned Albums",
-    nav: NavigationRoutes.Owned,
-  },
+  // {
+  //   display: "Favourite Albums",
+  //   nav: NavigationRoutes.Favourite,
+  // },
+  // {
+  //   display: "Owned Albums",
+  //   nav: NavigationRoutes.Owned,
+  // },
 ];
 
 const SearchEntry = styled("div")(({ theme }) => ({

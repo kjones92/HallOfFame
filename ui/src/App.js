@@ -33,8 +33,6 @@ const loggedInRoutes = () => {
   return (
     <>
       <Route path={NavigationRoutes.Profile} element={<Profile />} />
-      <Route path={NavigationRoutes.Favourite} element={<Favourite />} />
-      <Route path={NavigationRoutes.Owned} element={<Owned />} />
     </>
   );
 };

@@ -3,8 +3,6 @@ export default {
   Albums: "/albums",
   PendingReviews: "/pending/reviews",
   Profile: "/profile",
-  Favourite: "/favourite",
-  Owned: "/owned",
   Home: "/",
   AlbumDetails: "/album/:albumId",
   Login: "/login",

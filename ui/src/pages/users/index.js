@@ -1,12 +1,26 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { Title } from "../../components";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { UserService } from "../../services";
 import { NavigationUtils } from "../../utils";
 import { NavigationRoutes } from "../../constants";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const columns = [
   {
@@ -33,7 +47,6 @@ const columns = [
           <Button component={Link} to={navigationTarget} color="inherit">
             Edit
           </Button>
-          <Button color="inherit">Delete</Button>
         </>
       );
     },
@@ -41,19 +54,64 @@ const columns = [
 ];
 
 const Users = () => {
+  const [modalOpen, setModalOpen] = useState(false);
   const [users, setUsers] = useState([]);
 
-  const getUserData = async () => {
+  const [userRoleId, setUserRoleId] = useState();
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
+  const [email, setEmail] = useState();
+
+  const handleClickOpen = () => setModalOpen(true);
+  const handleClose = () => {
+    setModalOpen(false);
+    setUserRoleId();
+    setUsername();
+    setPassword();
+    setEmail();
+  };
+  const getUserData = async () =>
     UserService.getAllUsers().then((data) => setUsers(data));
+
+  const handleAddUser = async (e) => {
+    try {
+      await UserService.addUser(email, username, password, userRoleId);
+      toast.success("Successfully added user");
+      handleClose();
+      await getUserData();
+    } catch {
+      toast.success("Some has gone wrong with adding a user");
+    }
   };
 
-  useEffect(() => {
-    getUserData();
-  }, []);
+  useEffect(() => getUserData(), []);
 
   return (
     <>
-      <Title title="Users" />
+      <Grid container>
+        <Grid item xs={6}>
+          <Title title="Users" />
+        </Grid>
+        <Grid item xs={6} style={{ alignSelf: "centre", textAlign: "end" }}>
+          <Box
+            style={{ width: "100%", marginTop: 20 }}
+            sx={{
+              display: "flex",
+              flexDirection: "row-reverse",
+              bgcolor: "background.paper",
+            }}
+          >
+            <Button
+              variant="contained"
+              style={{ marginRight: 15 }}
+              onClick={handleClickOpen}
+            >
+              Add User
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+
       <div style={{ height: "900px", width: "100%" }}>
         <DataGrid
           rows={users}
@@ -62,6 +120,65 @@ const Users = () => {
           disableSelectionOnClick
         />
       </div>
+      <Dialog open={modalOpen} onClose={handleClose}>
+        <DialogTitle>Add User</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please enter the details below to add a user:
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email"
+            required
+            type="email"
+            errorText="Must be a valid email"
+            fullWidth
+            variant="standard"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+          />
+          <TextField
+            margin="dense"
+            id="name"
+            label="Username"
+            type="username"
+            required
+            fullWidth
+            variant="standard"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+          />
+          <FormControl fullWidth required>
+            <InputLabel variant="standard">Role</InputLabel>
+            <Select
+              label="Role"
+              variant="standard"
+              value={userRoleId}
+              onChange={(e) => setUserRoleId(e.target.value)}
+            >
+              <MenuItem value={1}>Administrator</MenuItem>
+              <MenuItem value={2}>Member</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            margin="dense"
+            id="name"
+            required
+            label="Password"
+            type="password"
+            fullWidth
+            variant="standard"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleAddUser}>Add</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Title } from "../../components";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import AlbumsService from "../../services/albums";
 import { NavigationUtils } from "../../utils";
 import { NavigationRoutes } from "../../constants";
@@ -43,9 +43,13 @@ const columns = [
       );
 
       return (
-        <Button component={Link} to={navigationTarget} color="inherit">
-          View
-        </Button>
+        <>
+          <Button component={Link} to={navigationTarget} color="inherit">
+            View
+          </Button>
+          <Button color="inherit">Edit</Button>
+          <Button color="inherit">Delete</Button>
+        </>
       );
     },
   },
@@ -65,9 +69,22 @@ const Albums = () => {
   const [searchParams] = useSearchParams();
   const album = searchParams.get("album");
 
+  const addAlbumClicked = () => {
+    console.log("Add Album");
+  };
+
   return (
     <>
-      <Title title="Top 500" />
+      <Grid container>
+        <Grid item xs={8}>
+          <Title title="Top Albums Of All Time" />
+        </Grid>
+        <Grid item xs={4} style={{ alignSelf: "center", textAlign: "end" }}>
+          <Button variant="contained" onClick={() => addAlbumClicked()}>
+            Add Album
+          </Button>
+        </Grid>
+      </Grid>
       <div style={{ height: "900px", width: "100%" }}>
         <DataGrid
           rows={albums}

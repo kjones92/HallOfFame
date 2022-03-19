@@ -1,16 +1,3 @@
-//Mark Code
-
-// function CreateAccountForm() {
-//   return (
-//     <section>
-//       <h1>Create an Account</h1>
-//     </section>
-//   );
-// }
-// export default CreateAccountForm;
-
-//need to add 'create account' to navigation
-
 import react, { useState } from "react";
 import { Title } from "../../components";
 import { Paper, Stack, Container, TextField, Button } from "@mui/material";

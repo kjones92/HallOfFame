@@ -214,16 +214,56 @@ function handleDelete($albumId)
 
     include("./utils/dbconn.php");
 
-    $read = "DELETE FROM album WHERE album.id = ? ;";
 
-    $query = $conn->prepare($read);
-    $query->bind_param("i", $albumId);
+    $albumExists = "SELECT id, ranking FROM album u where id = ?;";
 
-    if ($query->execute()) {
-        header("HTTP/1.1 204 OK");
+    $albumExistsQuery = $conn->prepare($albumExists);
+    $albumExistsQuery->bind_param("i", $albumId);
+
+    $albumExistsQuery->execute();
+    $albumExists = $albumExistsQuery->get_result();
+    $row = $albumExists->fetch_assoc();
+
+    if (isset($row["id"])) {
+        $conn->autocommit(false);
+        try {
+            $deleteAlbum = "DELETE FROM album WHERE album.id = ? ;";
+            $deleteAlbumQuery = $conn->prepare($deleteAlbum);
+            $deleteAlbumQuery->bind_param("i", $albumId);
+
+            $artistQuery = $conn->prepare("delete from artist_album where album_id = ?");
+            $artistQuery->bind_param('i', $albumId);
+
+            $genreQuery = $conn->prepare("delete from album_genre where album_id = ?");
+            $genreQuery->bind_param('i', $albumId);
+
+            $subgenreQuery = $conn->prepare("delete from album_subgenre where album_id = ?");
+            $subgenreQuery->bind_param('i', $albumId);
+
+            $reviewsQuery = $conn->prepare("delete from review where album_id = ?");
+            $reviewsQuery->bind_param('i', $albumId);
+
+            $rank = $row["ranking"];
+            $updateRankQuery = $conn->prepare("UPDATE album set ranking = ranking - 1 where ranking >= ?");
+            $updateRankQuery->bind_param('i', $rank);
+
+
+            $artistQuery->execute();
+            $genreQuery->execute();
+            $subgenreQuery->execute();
+            $reviewsQuery->execute();
+            $deleteAlbumQuery->execute();
+            $updateRankQuery->execute();
+
+            $conn->autocommit(true);
+
+            header("HTTP/1.1 204 OK");
+        } catch (Exception $e) {
+            header("HTTP/1.1 500 Internal Server Error");
+            echo $e->getMessage();
+        }
     } else {
-        header("HTTP/1.1 500 Internal Server Error");
-        echo $conn->error;
+        header("HTTP/1.1 204 OK");
     }
 }
 

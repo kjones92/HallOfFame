@@ -43,10 +43,6 @@
           include("./handlers/reviewStatuses.php");
           break;
         }
-        header("HTTP/1.1 404 Not Found");
-        $handleRoute = false;
-        break;
-      case 'reviews':
         include("./handlers/reviews.php");
         break;
       case 'genres':
@@ -76,4 +72,3 @@
   } else {
     header("HTTP/1.1 404 Not Found");
   }
-?>

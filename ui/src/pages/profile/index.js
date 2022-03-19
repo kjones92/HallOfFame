@@ -1,28 +1,12 @@
-import react, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Title } from "../../components";
-import {
-  Paper,
-  Stack,
-  Container,
-  TextField,
-  Button,
-  Grid,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Stack, Container, TextField, Button, Grid } from "@mui/material";
 import { AuthContext } from "../../contexts";
 import { UserService, TokenService } from "../../services";
 import { LoginUtils } from "../../utils";
 import { NavigationRoutes } from "../../constants";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
 
 function Profile() {
   const { state, dispatch } = AuthContext.useLogin();
@@ -72,7 +56,6 @@ function Profile() {
           <Stack spacing={2}>
             <TextField
               disabled
-              required
               id="outlined-required"
               label="Email"
               value={email}
@@ -86,7 +69,6 @@ function Profile() {
               value={username}
             />
             <TextField
-              required
               id="outlined-required"
               label="Password"
               type="password"
