@@ -79,7 +79,7 @@ function handleGetSingle($albumId)
         $averageRow = $averageResult->fetch_assoc();
 
         $row = (array)$row;
-        $row['score'] =  $averageRow['score'];
+        $row['score'] =  intval($averageRow['score']);
         $row = (object)$row;
 
         header("HTTP/1.1 200 OK");

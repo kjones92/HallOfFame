@@ -21,10 +21,10 @@ const updatePendingReview = async (reviewId, reviewStatusId) => {
   );
 };
 
-const getAllReviews = async () => {
+const getAllAlbumReviews = async (albumId) => {
   try {
     const response = await FetchInstance(
-      "http://localhost:8080/api.php/reviews"
+      `http://localhost:8080/api.php/albums/${albumId}/reviews`
     );
     return await response.json();
   } catch {
@@ -33,7 +33,7 @@ const getAllReviews = async () => {
 };
 
 export default {
-  getAllReviews,
   getAllPendingReviews,
   updatePendingReview,
+  getAllAlbumReviews,
 };

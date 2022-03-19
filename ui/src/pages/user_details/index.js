@@ -69,20 +69,20 @@ function UserDetails() {
 
   return (
     <>
-      <Stack spacing={2}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link
-            underline="hover"
-            color="inherit"
-            component={RouterLink}
-            to={NavigationRoutes.Users}
-          >
-            Users
-          </Link>
-          <Typography color="text.primary">{username}</Typography>
-        </Breadcrumbs>
-        <Title title="User Information" />
-      </Stack>
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        style={{ marginTop: 25, marginBottom: 50 }}
+      >
+        <Link
+          underline="hover"
+          color="inherit"
+          component={RouterLink}
+          to={NavigationRoutes.Users}
+        >
+          Users
+        </Link>
+        <Typography color="text.primary">User Details - {username}</Typography>
+      </Breadcrumbs>
 
       {!loading && (
         <Container fixed>

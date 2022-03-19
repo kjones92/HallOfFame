@@ -14,6 +14,18 @@ const getUserAlbums = async (favourite, owned) => {
   }
 };
 
+const getUserAlbum = async (albumId) => {
+  try {
+    const response = await FetchInstance(
+      `http://localhost:8080/api.php/users/albums/${albumId}`
+    );
+    return await response.json();
+  } catch {
+    return { is_favourite: 0, is_owned: 0 };
+  }
+};
+
 export default {
   getUserAlbums,
+  getUserAlbum,
 };
