@@ -70,7 +70,7 @@ function handleGetSingle($albumId)
     $row = $result->fetch_assoc();
     if ($row != null) {
 
-        $average = "select avg(score) score from review where album_id = ?;";
+        $average = "select avg(score) score from review where album_id = ? and review_status_id = 2;";
         $averageQuery = $conn->prepare($average);
         $averageQuery->bind_param("i", $albumId);
         $averageQuery->execute();

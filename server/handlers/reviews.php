@@ -44,7 +44,7 @@ function handleGet($albumId)
     $read = "SELECT r.id, r.title, r.description, r.score, r.date, r.review_status_id, r.user_id, u.username
             FROM review r
             INNER JOIN user u on r.user_id = u.id
-            WHERE r.album_id = ?
+            WHERE r.album_id = ? and r.review_status_id = 2
             order by date desc;";
 
     $query = $conn->prepare($read);
