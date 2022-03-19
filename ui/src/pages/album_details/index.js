@@ -30,12 +30,14 @@ function AlbumDetails() {
   const [userAlbum, setUserAlbum] = useState();
   const [reviews, setReviews] = useState();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const [reviewTitle, setReviewTitle] = useState();
   const [reviewDescription, setReviewDescription] = useState();
   const [reviewRating, setReviewRating] = useState();
 
   const isLoggedIn = state.access && !LoginUtils.isTokenExpired(state);
+  const isAdmin = isLoggedIn && LoginUtils.isAdminUser(state.access);
 
   const { albumId } = useParams();
 
@@ -54,6 +56,7 @@ function AlbumDetails() {
       getReviewsData(albumId),
       getUserAlbumData(albumId),
     ]);
+
     setLoading(false);
   };
 
@@ -82,13 +85,29 @@ function AlbumDetails() {
     }
   };
 
+  const handleDeleteAlbum = async (e) => {
+    try {
+      await AlbumService.deleteAlbum(albumId);
+      navigate(NavigationRoutes.Home);
+      toast.success("Successfully deleted album!");
+    } catch {
+      toast.error("Something has gone wrong with deleting this album");
+    }
+  };
+
   useEffect(() => {
     initialLoadData(albumId);
   }, [albumId]);
 
+  useEffect(() => {
+    if (!loading && !album) {
+      navigate(NavigationRoutes.Home);
+    }
+  }, [loading, album]);
+
   return (
     <>
-      {!loading && (
+      {!loading && album && (
         <>
           <Grid container>
             <Grid item xs={6}>
@@ -119,6 +138,15 @@ function AlbumDetails() {
                     bgcolor: "background.paper",
                   }}
                 >
+                  {isAdmin && (
+                    <Button
+                      variant="contained"
+                      style={{ marginRight: 15 }}
+                      onClick={() => handleDeleteAlbum()}
+                    >
+                      Delete Album
+                    </Button>
+                  )}
                   <Button
                     variant="contained"
                     style={{ marginRight: 15 }}
@@ -222,6 +250,7 @@ function AlbumDetails() {
                       <h2>Reviews</h2>
                       {reviews.map((review) => (
                         <Stack
+                          key={review.id}
                           spacing={2}
                           style={{ marginLeft: 70, marginRight: 150 }}
                         >

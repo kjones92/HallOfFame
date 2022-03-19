@@ -57,7 +57,7 @@ const Users = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [users, setUsers] = useState([]);
 
-  const [userRoleId, setUserRoleId] = useState();
+  const [userRoleId, setUserRoleId] = useState(1);
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
   const [email, setEmail] = useState();
@@ -129,11 +129,10 @@ const Users = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            id="email"
             label="Email"
             required
             type="email"
-            errorText="Must be a valid email"
             fullWidth
             variant="standard"
             onChange={(e) => setEmail(e.target.value)}
@@ -141,7 +140,7 @@ const Users = () => {
           />
           <TextField
             margin="dense"
-            id="name"
+            id="username"
             label="Username"
             type="username"
             required
@@ -164,7 +163,7 @@ const Users = () => {
           </FormControl>
           <TextField
             margin="dense"
-            id="name"
+            id="password"
             required
             label="Password"
             type="password"

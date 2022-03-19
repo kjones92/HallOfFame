@@ -82,7 +82,7 @@ const Albums = () => {
   const [subgenres, setSubgenres] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [albumFilter, setAlbumFilter] = useState();
+  const [albumFilter, setAlbumFilter] = useState("");
 
   const [title, setTitle] = useState();
   const [year, setYear] = useState();
@@ -291,7 +291,9 @@ const Albums = () => {
               onChange={(e) => setArtistId(e.target.value)}
             >
               {artists.map((artist) => (
-                <MenuItem value={artist.id}>{artist.name}</MenuItem>
+                <MenuItem key={artist.id} value={artist.id}>
+                  {artist.name}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -304,7 +306,9 @@ const Albums = () => {
               onChange={(e) => setGenreId(e.target.value)}
             >
               {genres.map((genre) => (
-                <MenuItem value={genre.id}>{genre.description}</MenuItem>
+                <MenuItem key={genre.id} value={genre.id}>
+                  {genre.description}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -317,7 +321,9 @@ const Albums = () => {
               onChange={(e) => setSubGenreId(e.target.value)}
             >
               {subgenres.map((subgenre) => (
-                <MenuItem value={subgenre.id}>{subgenre.description}</MenuItem>
+                <MenuItem key={subgenre.id} value={subgenre.id}>
+                  {subgenre.description}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>

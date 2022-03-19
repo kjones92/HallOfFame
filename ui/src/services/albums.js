@@ -13,14 +13,21 @@ const getAllAlbums = async () => {
 };
 
 const getAlbum = async (albumId) => {
-  try {
-    const response = await FetchInstance(
-      `http://localhost:8080/api.php/albums/${albumId}`
-    );
+  const response = await FetchInstance(
+    `http://localhost:8080/api.php/albums/${albumId}`
+  );
+  if (response.status === 200) {
     return await response.json();
+  }
+};
+
+const deleteAlbum = async (albumId) => {
+  try {
+    await FetchInstance(`http://localhost:8080/api.php/albums/${albumId}`, {
+      method: "DELETE",
+    });
   } catch {
     alert("something has gone wrong!");
-    return {};
   }
 };
 
@@ -35,4 +42,5 @@ export default {
   getAllAlbums,
   addAlbum,
   getAlbum,
+  deleteAlbum,
 };
