@@ -9,4 +9,5 @@ export default {
   AlbumDetails: "/album/:albumId",
   Login: "/login",
   CreateAccount: "/users/create",
+  UserDetails: "/users/:userId",
 };

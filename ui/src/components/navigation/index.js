@@ -37,10 +37,6 @@ const adminPages = [
     display: "Users",
     nav: NavigationRoutes.Users,
   },
-  {
-    display: "Albums",
-    nav: NavigationRoutes.Albums,
-  },
 ];
 
 const settings = [
@@ -49,11 +45,11 @@ const settings = [
     nav: NavigationRoutes.Profile,
   },
   {
-    display: "Favourite Music",
+    display: "Favourite Albums",
     nav: NavigationRoutes.Favourite,
   },
   {
-    display: "Owned Music",
+    display: "Owned Albums",
     nav: NavigationRoutes.Owned,
   },
 ];

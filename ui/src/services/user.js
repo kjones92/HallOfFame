@@ -1,5 +1,15 @@
 import { FetchInstance } from "../utils/";
 
+const getAllUsers = async () => {
+  try {
+    const response = await FetchInstance(`http://localhost:8080/api.php/users`);
+    return await response.json();
+  } catch {
+    alert("something has gone wrong!");
+    return [];
+  }
+};
+
 const getUser = async (userId) => {
   try {
     const response = await FetchInstance(
@@ -43,4 +53,5 @@ export default {
   getUser,
   saveUser,
   deleteUser,
+  getAllUsers,
 };

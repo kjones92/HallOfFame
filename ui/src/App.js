@@ -4,13 +4,13 @@ import {
   Home,
   PendingReviews,
   Users,
-  Albums,
   Profile,
   Favourite,
   Owned,
   AlbumDetails,
   Login,
   CreateAccount,
+  UserDetails,
 } from "./pages";
 import { NavigationRoutes } from "./constants";
 import { AuthContext } from "./contexts";
@@ -20,7 +20,7 @@ const adminRoutes = () => {
   return (
     <>
       <Route path={NavigationRoutes.Users} element={<Users />} />
-      <Route path={NavigationRoutes.Albums} element={<Albums />} />
+      <Route path={NavigationRoutes.UserDetails} element={<UserDetails />} />
       <Route
         path={NavigationRoutes.PendingReviews}
         element={<PendingReviews />}
