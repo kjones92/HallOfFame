@@ -11,6 +11,16 @@ const getAllPendingReviews = async () => {
   }
 };
 
+const addReview = async (albumId, title, description, score) => {
+  await FetchInstance(
+    `http://localhost:8080/api.php/albums/${albumId}/reviews`,
+    {
+      method: "POST",
+      body: JSON.stringify({ title, description, score }),
+    }
+  );
+};
+
 const updatePendingReview = async (reviewId, reviewStatusId) => {
   await FetchInstance(
     `http://localhost:8080/api.php/reviews/pending/${reviewId}`,
@@ -36,4 +46,5 @@ export default {
   getAllPendingReviews,
   updatePendingReview,
   getAllAlbumReviews,
+  addReview,
 };

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link as RouterLink } from "react-router-dom";
-import { Title } from "../../components";
 import {
-  Paper,
   Stack,
   Breadcrumbs,
   Link,
@@ -10,31 +8,34 @@ import {
   Grid,
   Box,
   Rating,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { AuthContext } from "../../contexts";
 import { AlbumService, ReviewService, UserAlbumService } from "../../services";
 import { LoginUtils } from "../../utils";
 import { NavigationRoutes } from "../../constants";
+import toast from "react-hot-toast";
 import noImage from "../../assets/no-album.jpeg";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
-
 function AlbumDetails() {
-  const { state, dispatch } = AuthContext.useLogin();
+  const { state } = AuthContext.useLogin();
+  const [modalOpen, setModalOpen] = useState(false);
   const [album, setAlbum] = useState();
   const [userAlbum, setUserAlbum] = useState();
   const [reviews, setReviews] = useState();
   const [loading, setLoading] = useState(true);
 
-  const userId = LoginUtils.getUserId(state.access);
-  const navigate = useNavigate();
+  const [reviewTitle, setReviewTitle] = useState();
+  const [reviewDescription, setReviewDescription] = useState();
+  const [reviewRating, setReviewRating] = useState();
+
+  const isLoggedIn = state.access && !LoginUtils.isTokenExpired(state);
 
   const { albumId } = useParams();
 
@@ -56,6 +57,31 @@ function AlbumDetails() {
     setLoading(false);
   };
 
+  const handleClickOpen = () => setModalOpen(true);
+
+  const handleClose = () => {
+    setModalOpen(false);
+    setReviewTitle();
+    setReviewDescription();
+    setReviewRating();
+  };
+
+  const handleAddReview = async (e) => {
+    try {
+      await ReviewService.addReview(
+        albumId,
+        reviewTitle,
+        reviewDescription,
+        reviewRating
+      );
+      await getReviewsData(albumId);
+      toast.success("Successfully added pending review. Awaiting approval!");
+      handleClose();
+    } catch {
+      toast.error("Something has gone wrong with adding a review");
+    }
+  };
+
   useEffect(() => {
     initialLoadData(albumId);
   }, [albumId]);
@@ -64,24 +90,47 @@ function AlbumDetails() {
     <>
       {!loading && (
         <>
-          <Stack spacing={2}>
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              style={{ marginTop: 25, marginBottom: 50 }}
-            >
-              <Link
-                underline="hover"
-                color="inherit"
-                component={RouterLink}
-                to={NavigationRoutes.Home}
+          <Grid container>
+            <Grid item xs={6}>
+              <Breadcrumbs
+                aria-label="breadcrumb"
+                style={{ marginTop: 25, marginBottom: 50 }}
               >
-                Top Albums Of All Time
-              </Link>
-              <Typography color="text.primary">
-                {album.artist} - {album.album}
-              </Typography>
-            </Breadcrumbs>
-          </Stack>
+                <Link
+                  underline="hover"
+                  color="inherit"
+                  component={RouterLink}
+                  to={NavigationRoutes.Home}
+                >
+                  Top Albums Of All Time
+                </Link>
+                <Typography color="text.primary">
+                  {album.artist} - {album.album}
+                </Typography>
+              </Breadcrumbs>
+            </Grid>
+            <Grid item xs={6} style={{ alignSelf: "centre", textAlign: "end" }}>
+              {isLoggedIn && (
+                <Box
+                  style={{ width: "100%", marginTop: 20 }}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row-reverse",
+                    bgcolor: "background.paper",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    style={{ marginRight: 15 }}
+                    onClick={() => handleClickOpen()}
+                  >
+                    Add Review
+                  </Button>
+                </Box>
+              )}
+            </Grid>
+          </Grid>
+
           {!loading && album && (
             <Grid container>
               <Grid
@@ -214,6 +263,55 @@ function AlbumDetails() {
               </Grid>
             </Grid>
           )}
+          <Dialog open={modalOpen} onClose={handleClose}>
+            <DialogTitle>Add Review</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter the details below to add a review:
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="title"
+                label="Title"
+                inputProps={{ maxLength: 50 }}
+                required
+                fullWidth
+                variant="standard"
+                onChange={(e) => setReviewTitle(e.target.value)}
+                value={reviewTitle}
+              />
+              <TextField
+                margin="dense"
+                id="description"
+                label="Description"
+                inputProps={{ maxLength: 250 }}
+                required
+                multiline
+                fullWidth
+                variant="standard"
+                onChange={(e) => setReviewDescription(e.target.value)}
+                value={reviewDescription}
+              />
+
+              <Typography
+                style={{ marginTop: 20 }}
+                component="legend"
+                value={reviewRating}
+              >
+                Rating
+              </Typography>
+              <Rating
+                onChange={(_, v) => setReviewRating(v)}
+                name="size-large"
+                size="large"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button onClick={handleAddReview}>Add</Button>
+            </DialogActions>
+          </Dialog>
         </>
       )}
     </>

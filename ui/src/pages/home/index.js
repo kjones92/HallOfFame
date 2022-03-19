@@ -246,6 +246,9 @@ const Albums = () => {
       <Dialog open={modalOpen} onClose={handleClose}>
         <DialogTitle>Add Album</DialogTitle>
         <DialogContent>
+          <DialogContentText>
+            Please enter the details below to add an album:
+          </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
@@ -279,10 +282,6 @@ const Albums = () => {
             onChange={(e) => setRank(e.target.value)}
             value={rank}
           />
-          <DialogContentText>
-            Please enter the details below to add an album:
-          </DialogContentText>
-
           <FormControl fullWidth required>
             <InputLabel variant="standard">Artist</InputLabel>
             <Select
