@@ -15,6 +15,9 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import { AuthContext } from "../../contexts";
 import { AlbumService, ReviewService, UserAlbumService } from "../../services";
@@ -93,6 +96,24 @@ function AlbumDetails() {
     } catch {
       toast.error("Something has gone wrong with deleting this album");
     }
+  };
+
+  const handleUserAlbumChange = async (checked, source) => {
+    debugger;
+    const userAlbumToSave = { ...userAlbum };
+    if (source === "favourite") {
+      userAlbumToSave.is_favourite = checked ? 1 : 0;
+    } else {
+      userAlbumToSave.is_owned = checked ? 1 : 0;
+    }
+
+    await UserAlbumService.setUserAlbum(
+      userAlbumToSave.is_owned,
+      userAlbumToSave.is_favourite,
+      albumId
+    );
+    await getUserAlbumData(albumId);
+    toast.success(`Successfully updated ${source}!`);
   };
 
   useEffect(() => {
@@ -197,6 +218,37 @@ function AlbumDetails() {
                       size="large"
                     />
                   </Box>
+                  {isLoggedIn && userAlbum && (
+                    <FormGroup
+                      style={{ flexDirection: "row", justifyContent: "center" }}
+                    >
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            onChange={(e) => {
+                              handleUserAlbumChange(e.target.checked, "owned");
+                            }}
+                            checked={userAlbum.is_owned === 1}
+                          />
+                        }
+                        label="Owned"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            onChange={(e) => {
+                              handleUserAlbumChange(
+                                e.target.checked,
+                                "favourite"
+                              );
+                            }}
+                            checked={userAlbum.is_favourite === 1}
+                          />
+                        }
+                        label="Favourite"
+                      />
+                    </FormGroup>
+                  )}
                 </Stack>
               </Grid>
               <Grid

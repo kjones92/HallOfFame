@@ -100,12 +100,12 @@ function handlePut($albumId, $requestVariables)
     } else {
         include("./utils/dbconn.php");
 
-        $deleteExisting = "delete from user_album where user_id = ?";
+        $deleteExisting = "delete from user_album where user_id = ? and album_id = ?";
         $headers = apache_request_headers();
         $userId = extractUserId(getBearerToken($headers["Authorization"]));
 
         $query = $conn->prepare($deleteExisting);
-        $query->bind_param("i", $userId);
+        $query->bind_param("ii", $userId, $albumId);
         if ($query->execute()) {
             $isOwned = $conn->real_escape_string($requestVariables['is_owned']);
             $isFavourite = $conn->real_escape_string($requestVariables['is_favourite']);

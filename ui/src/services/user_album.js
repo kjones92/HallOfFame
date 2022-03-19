@@ -25,7 +25,18 @@ const getUserAlbum = async (albumId) => {
   }
 };
 
+const setUserAlbum = async (is_owned, is_favourite, albumId) => {
+  return await FetchInstance(
+    `http://localhost:8080/api.php/users/albums/${albumId}`,
+    {
+      method: "PUT",
+      body: JSON.stringify({ is_owned, is_favourite }),
+    }
+  );
+};
+
 export default {
   getUserAlbums,
   getUserAlbum,
+  setUserAlbum,
 };

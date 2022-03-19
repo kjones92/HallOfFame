@@ -142,45 +142,49 @@ const Albums = () => {
     SubgenreService.getAllSubgenres().then((data) => setSubgenres(data));
   };
 
-  const initialLoadData = async () => {
-    await Promise.all([
-      getAlbumsData(),
-      getArtistsData(),
-      getGenreData(),
-      getSubgenreData(),
-    ]);
+  const initialLoadData = async (isAdmin) => {
+    if (isAdmin) {
+      await Promise.all([
+        getAlbumsData(),
+        getArtistsData(),
+        getGenreData(),
+        getSubgenreData(),
+      ]);
+    } else {
+      getAlbumsData();
+    }
   };
 
-  const getUserAlbumsData = async () => {
-    const favourite = albumFilter === UserAlbumTypes.Favourite;
-    const owned = albumFilter === UserAlbumTypes.Owned;
-
+  const getUserAlbumsData = async (selection) => {
+    const favourite = selection === UserAlbumTypes.Favourite;
+    const owned = selection === UserAlbumTypes.Owned;
+    debugger;
     UserAlbumService.getUserAlbums(favourite, owned).then((data) =>
       setAlbums(data)
     );
   };
-
-  useEffect(() => {
-    initialLoadData();
-  }, []);
 
   const [searchParams] = useSearchParams();
   const album = searchParams.get("album");
   const isLoggedIn = !LoginUtils.isTokenExpired(state);
   const isAdmin = isLoggedIn && LoginUtils.isAdminUser(state?.access);
 
+  useEffect(() => {
+    initialLoadData(isAdmin);
+  }, [isAdmin]);
+
   const albumFilterChanged = (e) => {
     const selection = e.target.value;
     if (albumFilter !== selection) {
+      setAlbumFilter(selection);
       if (
         selection == UserAlbumTypes.Favourite ||
         selection == UserAlbumTypes.Owned
       ) {
-        getUserAlbumsData();
+        getUserAlbumsData(selection);
       } else {
         getAlbumsData();
       }
-      setAlbumFilter(selection);
     }
   };
 

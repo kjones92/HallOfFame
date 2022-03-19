@@ -20,7 +20,6 @@ const CreateAccount = () => {
         username,
         password
       );
-      debugger;
       if (response.status == 201) {
         toast.success("Account created! You can now login.");
         navigate(NavigationRoutes.Login);
