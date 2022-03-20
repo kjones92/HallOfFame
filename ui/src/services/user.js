@@ -2,7 +2,7 @@ import { FetchInstance } from "../utils/";
 
 const getAllUsers = async () => {
   try {
-    const response = await FetchInstance(`http://localhost:8080/api.php/users`);
+    const response = await FetchInstance("users");
     return await response.json();
   } catch {
     alert("something has gone wrong!");
@@ -12,9 +12,7 @@ const getAllUsers = async () => {
 
 const getUser = async (userId) => {
   try {
-    const response = await FetchInstance(
-      `http://localhost:8080/api.php/users/${userId}`
-    );
+    const response = await FetchInstance(`users/${userId}`);
     return await response.json();
   } catch {
     alert("something has gone wrong!");
@@ -23,14 +21,14 @@ const getUser = async (userId) => {
 };
 
 const addUser = async (email, username, password, user_role_id) => {
-  return await FetchInstance(`http://localhost:8080/api.php/users/`, {
+  return await FetchInstance("users/", {
     method: "POST",
     body: JSON.stringify({ email, username, password, user_role_id }),
   });
 };
 
 const registerUser = async (email, username, password) => {
-  return await FetchInstance(`http://localhost:8080/api.php/users/register`, {
+  return await FetchInstance("users/register", {
     method: "POST",
     body: JSON.stringify({ email, username, password }),
   });
@@ -38,13 +36,10 @@ const registerUser = async (email, username, password) => {
 
 const saveUser = async (userId, email, username, password, user_role_id) => {
   try {
-    const response = await FetchInstance(
-      `http://localhost:8080/api.php/users/${userId}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ email, username, password, user_role_id }),
-      }
-    );
+    const response = await FetchInstance(`users/${userId}`, {
+      method: "PUT",
+      body: JSON.stringify({ email, username, password, user_role_id }),
+    });
   } catch {
     alert("something has gone wrong!");
   }
@@ -52,12 +47,9 @@ const saveUser = async (userId, email, username, password, user_role_id) => {
 
 const deleteUser = async (userId) => {
   try {
-    const response = await FetchInstance(
-      `http://localhost:8080/api.php/users/${userId}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await FetchInstance(`users/${userId}`, {
+      method: "DELETE",
+    });
   } catch {
     alert("something has gone wrong!");
   }

@@ -2,9 +2,7 @@ import { FetchInstance } from "../utils/";
 
 const getAllPendingReviews = async () => {
   try {
-    const response = await FetchInstance(
-      "http://localhost:8080/api.php/reviews/pending"
-    );
+    const response = await FetchInstance("reviews/pending");
     return await response.json();
   } catch {
     return [];
@@ -12,30 +10,22 @@ const getAllPendingReviews = async () => {
 };
 
 const addReview = async (albumId, title, description, score) => {
-  await FetchInstance(
-    `http://localhost:8080/api.php/albums/${albumId}/reviews`,
-    {
-      method: "POST",
-      body: JSON.stringify({ title, description, score }),
-    }
-  );
+  await FetchInstance(`albums/${albumId}/reviews`, {
+    method: "POST",
+    body: JSON.stringify({ title, description, score }),
+  });
 };
 
 const updatePendingReview = async (reviewId, reviewStatusId) => {
-  await FetchInstance(
-    `http://localhost:8080/api.php/reviews/pending/${reviewId}`,
-    {
-      method: "PUT",
-      body: JSON.stringify({ review_status_id: reviewStatusId }),
-    }
-  );
+  await FetchInstance(`reviews/pending/${reviewId}`, {
+    method: "PUT",
+    body: JSON.stringify({ review_status_id: reviewStatusId }),
+  });
 };
 
 const getAllAlbumReviews = async (albumId) => {
   try {
-    const response = await FetchInstance(
-      `http://localhost:8080/api.php/albums/${albumId}/reviews`
-    );
+    const response = await FetchInstance(`albums/${albumId}/reviews`);
     return await response.json();
   } catch {
     return [];

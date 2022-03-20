@@ -2,9 +2,7 @@ import { FetchInstance } from "../utils/";
 
 const getAllAlbums = async () => {
   try {
-    const response = await FetchInstance(
-      "http://localhost:8080/api.php/albums"
-    );
+    const response = await FetchInstance("albums");
     return await response.json();
   } catch {
     alert("something has gone wrong!");
@@ -13,9 +11,7 @@ const getAllAlbums = async () => {
 };
 
 const getAlbum = async (albumId) => {
-  const response = await FetchInstance(
-    `http://localhost:8080/api.php/albums/${albumId}`
-  );
+  const response = await FetchInstance(`albums/${albumId}`);
   if (response.status === 200) {
     return await response.json();
   }
@@ -23,7 +19,7 @@ const getAlbum = async (albumId) => {
 
 const deleteAlbum = async (albumId) => {
   try {
-    await FetchInstance(`http://localhost:8080/api.php/albums/${albumId}`, {
+    await FetchInstance(`albums/${albumId}`, {
       method: "DELETE",
     });
   } catch {
@@ -32,7 +28,7 @@ const deleteAlbum = async (albumId) => {
 };
 
 const addAlbum = async (title, year, rank, artistId, genreId, subgenreId) => {
-  await FetchInstance(`http://localhost:8080/api.php/albums/`, {
+  await FetchInstance(`albums/`, {
     method: "POST",
     body: JSON.stringify({ title, year, rank, artistId, genreId, subgenreId }),
   });
@@ -47,7 +43,7 @@ const editAlbum = async (
   genreId,
   subgenreId
 ) => {
-  await FetchInstance(`http://localhost:8080/api.php/albums/${albumId}`, {
+  await FetchInstance(`albums/${albumId}`, {
     method: "PUT",
     body: JSON.stringify({
       title,
