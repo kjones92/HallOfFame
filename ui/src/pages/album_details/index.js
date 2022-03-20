@@ -54,11 +54,15 @@ function AlbumDetails() {
     UserAlbumService.getUserAlbum(albumId).then((data) => setUserAlbum(data));
 
   const initialLoadData = async (albumId) => {
-    await Promise.all([
-      getAlbumData(albumId),
-      getReviewsData(albumId),
-      getUserAlbumData(albumId),
-    ]);
+    if (isLoggedIn) {
+      await Promise.all([
+        getAlbumData(albumId),
+        getReviewsData(albumId),
+        getUserAlbumData(albumId),
+      ]);
+    } else {
+      await Promise.all([getAlbumData(albumId), getReviewsData(albumId)]);
+    }
 
     setLoading(false);
   };

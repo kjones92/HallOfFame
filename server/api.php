@@ -22,7 +22,8 @@
         include("./handlers/artists.php");
         break;
       case 'albums':
-        if (count($routing) >= 4 && strtolower($routing[3]) == "reviews") {
+        if (count($routing) >= 4 && strtolower($routing[3]) == "reviews" && $_SERVER['REQUEST_METHOD'] == "GET") {
+          $requiresAuth = false;
           include("./handlers/reviews.php");
           break;
         }

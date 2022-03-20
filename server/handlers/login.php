@@ -57,7 +57,8 @@
                 $password = $conn->real_escape_string($requestVariables['password']);
                 $databasePassword = $row["password"];
                 if (password_verify($password, $databasePassword)) {
-                    $access = array('sub'=>$row["id"],'name'=>$row["username"], 'user_role_id'=>$row["role_id"], 'exp'=>(time() + 18000));
+                    // note to self - adjust here for the duration of the tokens
+                    $access = array('sub'=>$row["id"],'name'=>$row["username"], 'user_role_id'=>$row["role_id"], 'exp'=>(time() + 1800000));
                     $refresh = array('sub'=>$row["id"], 'exp'=>(time() + 18000000));
                     
                     header("HTTP/1.1 200 OK"); 
