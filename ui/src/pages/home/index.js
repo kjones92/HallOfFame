@@ -326,6 +326,7 @@ const Albums = () => {
             margin="dense"
             id="year"
             label="Year"
+            InputProps={{ inputProps: { min: 1500 } }}
             required
             type="number"
             fullWidth
