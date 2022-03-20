@@ -338,6 +338,7 @@ const Albums = () => {
             id="rank"
             label="Rank"
             required
+            InputProps={{ inputProps: { min: 1 } }}
             type="number"
             fullWidth
             variant="standard"
