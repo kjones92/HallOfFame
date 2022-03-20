@@ -260,9 +260,8 @@
         if (isset($row["id"])) {
             $conn->autocommit(false);
             try {
-                $deleteAlbum = "DELETE FROM album WHERE album.id = ? ;";
-                $deleteAlbumQuery = $conn->prepare($deleteAlbum);
-                $deleteAlbumQuery->bind_param("i", $albumId);
+                $userAlbumQuery = $conn->prepare("delete from user_album where album_id = ?");
+                $userAlbumQuery->bind_param('i', $albumId);
 
                 $artistQuery = $conn->prepare("delete from artist_album where album_id = ?");
                 $artistQuery->bind_param('i', $albumId);
@@ -276,11 +275,15 @@
                 $reviewsQuery = $conn->prepare("delete from review where album_id = ?");
                 $reviewsQuery->bind_param('i', $albumId);
 
+                $deleteAlbum = "DELETE FROM album WHERE album.id = ? ;";
+                $deleteAlbumQuery = $conn->prepare($deleteAlbum);
+                $deleteAlbumQuery->bind_param("i", $albumId);
+
                 $rank = $row["ranking"];
                 $updateRankQuery = $conn->prepare("UPDATE album set ranking = ranking - 1 where ranking >= ?");
                 $updateRankQuery->bind_param('i', $rank);
 
-
+                $userAlbumQuery->execute();
                 $artistQuery->execute();
                 $genreQuery->execute();
                 $subgenreQuery->execute();
@@ -341,4 +344,3 @@
                 header("HTTP/1.1 404 Not Found");
         }
     }
-?>
