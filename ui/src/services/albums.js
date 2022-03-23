@@ -18,17 +18,13 @@ const getAlbum = async (albumId) => {
 };
 
 const deleteAlbum = async (albumId) => {
-  try {
-    await FetchInstance(`albums/${albumId}`, {
-      method: "DELETE",
-    });
-  } catch {
-    alert("something has gone wrong!");
-  }
+  return await FetchInstance(`albums/${albumId}`, {
+    method: "DELETE",
+  });
 };
 
 const addAlbum = async (title, year, rank, artistId, genreId, subgenreId) => {
-  await FetchInstance(`albums/`, {
+  return await FetchInstance(`albums/`, {
     method: "POST",
     body: JSON.stringify({ title, year, rank, artistId, genreId, subgenreId }),
   });
@@ -43,7 +39,7 @@ const editAlbum = async (
   genreId,
   subgenreId
 ) => {
-  await FetchInstance(`albums/${albumId}`, {
+  return await FetchInstance(`albums/${albumId}`, {
     method: "PUT",
     body: JSON.stringify({
       title,

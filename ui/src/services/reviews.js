@@ -10,14 +10,14 @@ const getAllPendingReviews = async () => {
 };
 
 const addReview = async (albumId, title, description, score) => {
-  await FetchInstance(`albums/${albumId}/reviews`, {
+  return await FetchInstance(`albums/${albumId}/reviews`, {
     method: "POST",
     body: JSON.stringify({ title, description, score }),
   });
 };
 
 const updatePendingReview = async (reviewId, reviewStatusId) => {
-  await FetchInstance(`reviews/pending/${reviewId}`, {
+  return await FetchInstance(`reviews/pending/${reviewId}`, {
     method: "PUT",
     body: JSON.stringify({ review_status_id: reviewStatusId }),
   });

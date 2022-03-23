@@ -96,8 +96,8 @@
     function handlePost($requestVariables)
     {
 
-        if ((!isset($requestVariables['title'])) || (!isset($requestVariables['year'])) || (!isset($requestVariables['artistId']))
-            || (!isset($requestVariables['genreId'])) || (!isset($requestVariables['subgenreId'])) || (!isset($requestVariables['rank']))
+        if ((!isset($requestVariables['title']) || $requestVariables['title'] == '') || (!isset($requestVariables['year']) || $requestVariables['year'] == '') || (!isset($requestVariables['artistId']) || $requestVariables['artistId'] == '')
+            || (!isset($requestVariables['genreId']) || $requestVariables['genreId'] == '') || (!isset($requestVariables['subgenreId']) || $requestVariables['subgenreId'] == '') || (!isset($requestVariables['rank']) || $requestVariables['rank'] == '')
         ) {
             header("HTTP/1.1 400 Bad Request");
             echo "Album information is required";
@@ -151,11 +151,11 @@
     function handlePut($albumId, $requestVariables)
     {
 
-        if ((!isset($requestVariables['title'])) || (!isset($requestVariables['year'])) || (!isset($requestVariables['artistId']))
-            || (!isset($requestVariables['genreId'])) || (!isset($requestVariables['subgenreId'])) || (!isset($requestVariables['rank']))
+        if ((!isset($requestVariables['title']) || $requestVariables['title'] == '') || (!isset($requestVariables['year']) || $requestVariables['year'] == '') || (!isset($requestVariables['artistId']) || $requestVariables['artistId'] == '')
+            || (!isset($requestVariables['genreId']) || $requestVariables['genreId'] == '') || (!isset($requestVariables['subgenreId']) || $requestVariables['subgenreId'] == '') || (!isset($requestVariables['rank']) || $requestVariables['rank'] == '')
         ) {
             header("HTTP/1.1 400 Bad Request");
-            echo "Profile information is required";
+            echo "Album information is required";
         } else {
             include("./utils/dbconn.php");
 
@@ -327,7 +327,7 @@
                     handlePut($albumId, $requestVariables);
                 } else {
                     header("HTTP/1.1 400 Bad Request");
-                    echo "Id is required to update user";
+                    echo "Id is required to update album";
                 }
                 break;
             case 'DELETE':
@@ -337,7 +337,7 @@
                     handleDelete($albumId);
                 } else {
                     header("HTTP/1.1 400 Bad Request");
-                    echo "Id is required to update user";
+                    echo "Id is required to update album";
                 }
                 break;
             default:

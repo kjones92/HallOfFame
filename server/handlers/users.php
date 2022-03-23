@@ -65,9 +65,9 @@
     function handlePost($requestVariables)
     {
 
-        if ((!isset($requestVariables['username'])) || (!isset($requestVariables['email'])) || (!isset($requestVariables['password'])) || (!isset($requestVariables['user_role_id']))) {
+        if ((!isset($requestVariables['username']) || $requestVariables['username'] == '') || (!isset($requestVariables['email']) || $requestVariables['email'] == '') || (!isset($requestVariables['password']) || $requestVariables['password'] == '') || (!isset($requestVariables['user_role_id']) || $requestVariables['user_role_id'] == '')) {
             header("HTTP/1.1 400 Bad Request");
-            echo "Profile information is required";
+            echo "User information is required";
         } else {
             include("./utils/dbconn.php");
             $userExists = "SELECT id FROM user u where email = ? and is_deleted != 1;";
@@ -109,9 +109,9 @@
     function handlePut($userId, $requestVariables)
     {
 
-        if ((!isset($requestVariables['username'])) || (!isset($requestVariables['email'])) || (!isset($requestVariables['user_role_id']))) {
+        if ((!isset($requestVariables['username']) || $requestVariables['username'] == '') || (!isset($requestVariables['email']) || $requestVariables['email'] == '') || (!isset($requestVariables['user_role_id']) || $requestVariables['user_role_id'] == '')) {
             header("HTTP/1.1 400 Bad Request");
-            echo "Profile information is required";
+            echo "User information is required";
         } else {
             include("./utils/dbconn.php");
 

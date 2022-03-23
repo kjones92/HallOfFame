@@ -27,10 +27,7 @@
 
     function handlePost ($requestVariables) {
 
-        // instead of $_POST['username'] it should be $requestVariables['username']
-        // instead of isset($_POST['username']) it should be isset("username", $requestVariables)
-
-        if (!isset($requestVariables['name']))  {
+        if ((!isset($requestVariables['name']) || $requestVariables['name'] == ''))  {
             header("HTTP/1.1 400 Bad Request");
             echo "Artist information is required";  
 
@@ -60,9 +57,9 @@
 
     function handlePut ($artistId, $requestVariables) {
 
-        if (!isset($requestVariables['name'])) {
+        if ((!isset($requestVariables['name']) || $requestVariables['name'] == '')) {
             header("HTTP/1.1 400 Bad Request");
-            echo "Profile information is required";  
+            echo "Artist information is required";  
 
         }
         else {
@@ -134,7 +131,7 @@
                 }
                 else {
                     header("HTTP/1.1 400 Bad Request");
-                    echo "Id is required to update user";  
+                    echo "Id is required to update artist";  
                 }
               break;
               case 'DELETE':
@@ -145,7 +142,7 @@
                 }
                 else {
                     header("HTTP/1.1 400 Bad Request");
-                    echo "Id is required to update user";  
+                    echo "Id is required to update artist";  
                 }
               break;
             default:

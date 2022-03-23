@@ -14,8 +14,9 @@ function Login() {
   const navigate = useNavigate();
 
   const loginClicked = async () => {
-    const loginResult = await LoginService.login(email, password);
-    if (loginResult) {
+    const response = await LoginService.login(email, password);
+    if (response.status === 200) {
+      const loginResult = await response.json()
       TokenService.setAuth(loginResult);
       dispatch({
         type: "login",
@@ -23,7 +24,7 @@ function Login() {
       });
       navigate(NavigationRoutes.Home);
     } else {
-      toast.error("Login Failed");
+      toast.error("Invalid login details");
     }
   };
 

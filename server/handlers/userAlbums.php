@@ -96,7 +96,7 @@
     function handlePut($albumId, $requestVariables)
     {
 
-        if ((!isset($requestVariables['is_favourite'])) || (!isset($requestVariables['is_owned']))) {
+        if ((!isset($requestVariables['is_favourite']) || $requestVariables['is_favourite'] == '') || (!isset($requestVariables['is_owned']) || $requestVariables['is_owned'] == '')) {
             header("HTTP/1.1 400 Bad Request");
             echo "User Album association information is required";
         } else {

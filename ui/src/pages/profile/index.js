@@ -28,11 +28,13 @@ function Profile() {
   };
 
   const saveProfileClicked = async () => {
-    UserService.saveUser(userId, email, username, password, userRoleId).then(
-      () => {
-        toast.success("Profile Updated!");
-      }
-    );
+    const response = await UserService.saveUser(userId, email, username, password, userRoleId);
+    if (response.status == 204) {
+      toast.success("Profile Updated!");
+    }
+    else {
+      toast.error((await response.text()));
+    }
   };
 
   useEffect(() => {

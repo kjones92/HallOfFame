@@ -26,7 +26,7 @@
 
     function handlePost ($requestVariables) {
 
-        if ((!isset($requestVariables['description'])) || (!isset($requestVariables['genre_id']))) {
+        if ((!isset($requestVariables['description']) || $requestVariables['description'] == '') || (!isset($requestVariables['genre_id']) || $requestVariables['genre_id'] == '')) {
             header("HTTP/1.1 400 Bad Request");
             echo "Subgenre information is required";  
 
@@ -131,7 +131,7 @@
                 }
                 else {
                     header("HTTP/1.1 400 Bad Request");
-                    echo "Id is required to update user";  
+                    echo "Id is required to update subgenre";  
                 }
               break;
               case 'DELETE':
@@ -141,7 +141,7 @@
                 }
                 else {
                     header("HTTP/1.1 400 Bad Request");
-                    echo "Id is required to update user";  
+                    echo "Id is required to update subgenre";  
                 }
               break;
             default:

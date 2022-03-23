@@ -81,7 +81,6 @@ const Users = () => {
         password,
         userRoleId
       );
-      debugger;
 
       if (response.status == 201) {
         await getUserData();

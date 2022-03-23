@@ -91,7 +91,7 @@ const Albums = () => {
 
   const handleAddAlbum = async () => {
     try {
-      await AlbumService.addAlbum(
+      const response = await AlbumService.addAlbum(
         title,
         year,
         rank,
@@ -99,9 +99,14 @@ const Albums = () => {
         genreId,
         subgenreId
       );
-      await getAlbumsData();
-      toast.success("Successfully added album");
-      handleClose();
+      if (response.status === 201) {
+        await getAlbumsData();
+        toast.success("Successfully added album");
+        handleClose();
+      }
+      else {
+        toast.error((await response.text()));
+      }
     } catch {
       toast.error("Some has gone wrong with adding a album");
     }
@@ -109,7 +114,7 @@ const Albums = () => {
 
   const handleEditAlbum = async () => {
     try {
-      await AlbumService.editAlbum(
+      const response = await AlbumService.editAlbum(
         editAlbumId,
         title,
         year,
@@ -118,9 +123,14 @@ const Albums = () => {
         genreId,
         subgenreId
       );
-      await getAlbumsData();
-      toast.success("Successfully edited album");
-      handleClose();
+      if (response.status === 204) {
+        await getAlbumsData();
+        toast.success("Successfully edited album");
+        handleClose();
+      }
+      else {
+        toast.error((await response.text()));
+      }
     } catch {
       toast.error("Some has gone wrong with editing an album");
     }
@@ -158,7 +168,6 @@ const Albums = () => {
   const getUserAlbumsData = async (selection) => {
     const favourite = selection === UserAlbumTypes.Favourite;
     const owned = selection === UserAlbumTypes.Owned;
-    debugger;
     UserAlbumService.getUserAlbums(favourite, owned).then((data) =>
       setAlbums(data)
     );

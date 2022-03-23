@@ -29,7 +29,7 @@
     function handlePost($requestVariables)
     {
 
-        if ((!isset($requestVariables['description']))) {
+        if ((!isset($requestVariables['description']) || $requestVariables['description'] == '')) {
             header("HTTP/1.1 400 Bad Request");
             echo "Genre information is required";
         } else {
@@ -56,7 +56,7 @@
     function handlePut($genreId, $requestVariables)
     {
 
-        if ((!isset($requestVariables['description']))) {
+        if (!isset($requestVariables['description']) || $requestVariables['description'] == '') {
             header("HTTP/1.1 400 Bad Request");
             echo "Genre information is required";
         } else {
@@ -129,7 +129,7 @@
                     handlePut($genreId, $requestVariables);
                 } else {
                     header("HTTP/1.1 400 Bad Request");
-                    echo "Id is required to update user";
+                    echo "Id is required to update genre";
                 }
                 break;
             case 'DELETE':
@@ -138,7 +138,7 @@
                     handleDelete($genreId);
                 } else {
                     header("HTTP/1.1 400 Bad Request");
-                    echo "Id is required to update user";
+                    echo "Id is required to update genre";
                 }
                 break;
             default:

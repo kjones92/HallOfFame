@@ -78,15 +78,20 @@ function AlbumDetails() {
 
   const handleAddReview = async (e) => {
     try {
-      await ReviewService.addReview(
+      const response = await ReviewService.addReview(
         albumId,
         reviewTitle,
         reviewDescription,
         reviewRating
       );
-      await getReviewsData(albumId);
-      toast.success("Successfully added pending review. Awaiting approval!");
-      handleClose();
+      if (response.status === 201) {
+        await getReviewsData(albumId);
+        toast.success("Successfully added pending review. Awaiting approval!");
+        handleClose();
+      }
+      else {
+        toast.error((await response.text()));
+      }
     } catch {
       toast.error("Something has gone wrong with adding a review");
     }
@@ -94,16 +99,20 @@ function AlbumDetails() {
 
   const handleDeleteAlbum = async (e) => {
     try {
-      await AlbumService.deleteAlbum(albumId);
-      navigate(NavigationRoutes.Home);
-      toast.success("Successfully deleted album!");
+      const response = await AlbumService.deleteAlbum(albumId);
+      if (response.status === 204) {
+        navigate(NavigationRoutes.Home);
+        toast.success("Successfully deleted album!");
+      }
+      else {
+        toast.error((await response.text()));
+      }
     } catch {
       toast.error("Something has gone wrong with deleting this album");
     }
   };
 
   const handleUserAlbumChange = async (checked, source) => {
-    debugger;
     const userAlbumToSave = { ...userAlbum };
     if (source === "favourite") {
       userAlbumToSave.is_favourite = checked ? 1 : 0;

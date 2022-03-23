@@ -5,7 +5,6 @@ const getAllUsers = async () => {
     const response = await FetchInstance("users");
     return await response.json();
   } catch {
-    alert("something has gone wrong!");
     return [];
   }
 };
@@ -15,7 +14,6 @@ const getUser = async (userId) => {
     const response = await FetchInstance(`users/${userId}`);
     return await response.json();
   } catch {
-    alert("something has gone wrong!");
     return [];
   }
 };
@@ -35,14 +33,10 @@ const registerUser = async (email, username, password) => {
 };
 
 const saveUser = async (userId, email, username, password, user_role_id) => {
-  try {
-    const response = await FetchInstance(`users/${userId}`, {
-      method: "PUT",
-      body: JSON.stringify({ email, username, password, user_role_id }),
-    });
-  } catch {
-    alert("something has gone wrong!");
-  }
+  return await FetchInstance(`users/${userId}`, {
+    method: "PUT",
+    body: JSON.stringify({ email, username, password, user_role_id }),
+  });
 };
 
 const deleteUser = async (userId) => {

@@ -34,7 +34,7 @@
 
 
     function handlePost ($requestVariables) {
-        if ((!isset($requestVariables['email'])) || (!isset($requestVariables['password']))) {
+        if ((!isset($requestVariables['email']) || $requestVariables['email'] == '') || (!isset($requestVariables['password']) || $requestVariables['password'] == '')) {
             header("HTTP/1.1 400 Bad Request");
             echo "Login information is required";  
         }

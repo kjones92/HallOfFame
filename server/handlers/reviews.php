@@ -114,7 +114,7 @@
 
     function handlePost($albumId, $requestVariables)
     {
-        if ((!isset($requestVariables['title'])) || (!isset($requestVariables['description'])) || (!isset($requestVariables['score']))) {
+        if ((!isset($requestVariables['title']) || $requestVariables['title'] == '') || (!isset($requestVariables['description']) || $requestVariables['description'] == '') || (!isset($requestVariables['score']) || $requestVariables['score'] == '')) {
             header("HTTP/1.1 400 Bad Request");
             echo "Review information is required";
         } else {
@@ -137,8 +137,8 @@
             } else {
                 header("HTTP/1.1 201 Created");
             }
+            $conn->close();
         }
-        $conn->close();
     }
 
     function handlePut($reviewId, $requestVariables)
@@ -146,7 +146,7 @@
 
         if (!isset($requestVariables['review_status_id'])) {
             header("HTTP/1.1 400 Bad Request");
-            echo "Profile information is required";
+            echo "Review information is required";
         } else {
             include("./utils/dbconn.php");
 
