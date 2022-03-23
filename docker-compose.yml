@@ -28,7 +28,7 @@ services:
     command: -url='jdbc:mysql://db/kjones15?verifyServerCertificate=false&allowPublicKeyRetrieval=true' -user=kjones15
       -password=lw0thbd0jJctDKC9 -connectRetries=5 migrate
     volumes:
-      - ./database/base:/flyway/sql
+      - ./database:/flyway/sql
     depends_on:
       - db
 volumes:
