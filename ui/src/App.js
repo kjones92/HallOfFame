@@ -5,8 +5,6 @@ import {
   PendingReviews,
   Users,
   Profile,
-  Favourite,
-  Owned,
   AlbumDetails,
   Login,
   CreateAccount,

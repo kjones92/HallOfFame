@@ -294,9 +294,6 @@ const Albums = () => {
           columns={columns}
           getRowId={(row) => row.album_id}
           disableSelectionOnClick
-          componentsProps={{
-            admin: isAdmin,
-          }}
           initialState={
             album && {
               filter: {
@@ -335,7 +332,7 @@ const Albums = () => {
             margin="dense"
             id="year"
             label="Year"
-            InputProps={{ inputProps: { min: 1500 } }}
+            InputProps={{ inputProps: { min: 1500, max: new Date().getFullYear() } }}
             required
             type="number"
             fullWidth
