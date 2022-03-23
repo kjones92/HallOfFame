@@ -59,7 +59,7 @@ For the web application the URL we use for the APIs is hardcoded. This is held w
 
 # Stop Application
 
-To stop the application runnung in docker compose or if you're running `php -S localhost:8080`, simply press `control + c`.
+To stop the application running in docker compose or if you're running `php -S localhost:8080`, simply press `control + c`.
 
 # Clear database Step by Step
 
