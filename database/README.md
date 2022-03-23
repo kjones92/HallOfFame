@@ -1,7 +1,3 @@
-# Database
-
-Overview on how to start
-
 # Data cleanup process
 
 1. Create holding pen table
